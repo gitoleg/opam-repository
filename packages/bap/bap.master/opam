@@ -26,13 +26,19 @@ depends: [
     "bap-llvm" {= "master"}
     "bap-mc" {= "master"}
     "bap-microx" {= "master"}
+    "bap-mips" {= "master"}
     "bap-objdump" {= "master"}
+    "bap-powerpc" {= "master"}
     "bap-primus" {= "master"}
+    "bap-primus-dictionary" {= "master"}
     "bap-primus-lisp" {= "master"}
+    "bap-primus-region" {= "master"}
     "bap-primus-support" {= "master"}
+    "bap-primus-test" {= "master"}
     "bap-primus-x86" {= "master"}
     "bap-print" {= "master"}
     "bap-relocatable" {= "master"}
+    "bap-report" {= "master"}
     "bap-run" {= "master"}
     "bap-ssa" {= "master"}
     "bap-std" {= "master"}
@@ -43,6 +49,7 @@ depends: [
     "bap-term-mapper" {= "master"}
     "bap-trace" {= "master"}
     "bap-traces" {= "master"}
+    "bap-trivial-condition-form" {= "master"}
     "bap-warn-unused" {= "master"}
     "bap-x86" {= "master"}
 ]
