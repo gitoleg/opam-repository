@@ -1,5 +1,5 @@
 opam-version: "1.2"
-name: "bap-primus"
+name: "trivial-condition-form"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
@@ -8,21 +8,15 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["./configure" "--prefix=%{prefix}%" "--enable-primus"]
+  ["./configure" "--prefix=%{prefix}%" "--enable-trivial-condition-form"]
   [make]
 ]
 
 install: [[make "install"]]
 
-remove: [["ocamlfind" "remove" "bap-primus"]]
+remove: [["ocamlfind" "remove" "bap-plugin-trivial_condition_form"]
+         ["bapbundle" "remove" "trivial_condition_form.plugin"]]
 
 depends: [
-    "bap-std"
-    "bap-abi"
-    "bap-c"
-    "bap-future"
-    "bap-strings"
-    "monads"
-    "uuidm"
-    "parsexp"
+  "bap-std"
 ]
