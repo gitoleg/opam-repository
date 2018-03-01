@@ -66,6 +66,6 @@ depexts: [
 
 conflicts: [
   "fileutils" {= "0.5.0"}
-  "jbuilder" {build & = "1.0+beta18"}
+  "jbuilder" {= "1.0+beta18"}
 ]
 available: [ocaml-version >= "4.03.0"]
