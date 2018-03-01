@@ -42,7 +42,7 @@ depends: [
   "ppx_jane" {>= "v0.9.0" & < "v0.10"}
   "regular"
   "uri"
-  "utop"     {= "1.19.3"}
+  "utop"     {build & = "1.19.3"}
   "uuidm"
   "zarith"
   "cmdliner" {>= "0.9.8"}
