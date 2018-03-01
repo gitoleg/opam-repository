@@ -1,1 +1,4 @@
-A frontend for the Byteweight library
+BAP Toolkit for training and controlling Byteweight algorithm
+
+A command line interface to the byteweight system that can train,
+test, download, and upload binary signatures.
