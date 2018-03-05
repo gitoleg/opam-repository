@@ -1,5 +1,5 @@
 opam-version: "1.2"
-name: "trivial-condition-form"
+name: "bap-trivial-condition-form"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
