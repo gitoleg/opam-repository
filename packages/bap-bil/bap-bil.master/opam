@@ -1,5 +1,5 @@
 opam-version: "1.2"
-name: "bap-dead-code-elimination"
+name: "bap-bil"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
@@ -8,10 +8,12 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["./configure" "--prefix=%{prefix}%" "--enable-dead-code-elimination"]
+  ["./configure" "--prefix=%{prefix}%" "--enable-bil"]
   [make]
 ]
 install: [[make "install"]]
-remove: [["ocamlfind" "remove" "bap-plugin-dead_code_elimination"]
-         ["bapbundle" "remove" "dead_code_elimination.plugin"]]
-depends: ["bap-std"]
+
+remove: [["ocamlfind" "remove" "bap-plugin-bil"]
+         ["bapbundle" "remove" "bil.plugin"]]
+
+depends: ["bap-std" "cmdliner"]
