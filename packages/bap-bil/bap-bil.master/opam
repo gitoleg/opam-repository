@@ -12,8 +12,10 @@ build: [
   [make]
 ]
 install: [[make "install"]]
-
 remove: [["ocamlfind" "remove" "bap-plugin-bil"]
          ["bapbundle" "remove" "bil.plugin"]]
-
-depends: ["bap-std" "cmdliner"]
+depends: [
+  "bap-std"           {= "master"}
+  "cmdliner"
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

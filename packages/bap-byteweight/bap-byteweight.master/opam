@@ -24,6 +24,7 @@ remove: [
 ]
 
 depends: [
-    "bap-std"
+    "bap-std"           {= "master"}
     "bap-signatures"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

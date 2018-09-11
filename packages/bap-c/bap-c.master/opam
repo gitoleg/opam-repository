@@ -13,4 +13,8 @@ build: [
 ]
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-c"]]
-depends: ["bap-std" "bap-api"]
+depends: [
+  "bap-std"           {= "master"}
+  "bap-api"
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

@@ -28,7 +28,7 @@ remove: [
 ]
 
 depends: [
-    "bap-std"
+    "bap-std"           {= "master"}
     "cmdliner"
     "conf-env-travis"
     "conf-bap-llvm" {>= "1.1"}
@@ -40,3 +40,4 @@ depexts: [
     [["ubuntu"] ["clang"]]
     [["debian"] ["clang"]]
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

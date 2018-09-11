@@ -18,4 +18,10 @@ remove: [["ocamlfind" "remove" "bap-plugin-beagle"]
          ["bapbundle" "remove" "beagle.plugin"]
          ["bapbundle" "remove" "strings.plugin"]
          ]
-depends: ["bap-std" "cmdliner" "bap-microx" "bap-primus" ]
+depends: [
+  "bap-std"           {= "master"}
+  "cmdliner"
+  "bap-microx"
+  "bap-primus"        {= "master"}
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

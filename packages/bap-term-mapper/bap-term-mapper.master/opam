@@ -26,6 +26,7 @@ remove: [[ "ocamlfind" "remove" "bap-plugin-map_terms"]
 
 depends: [
     "oasis"             {build & = "0.4.7"}
-    "bap-std"
+    "bap-std"           {= "master"}
     "cmdliner"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

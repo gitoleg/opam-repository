@@ -18,5 +18,6 @@ remove: [["ocamlfind" "remove" "bap-plugin-report"]
          ["bapbundle" "remove" "report.plugin"]]
 
 depends: [
-  "bap-std"
+  "bap-std"           {= "master"}
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

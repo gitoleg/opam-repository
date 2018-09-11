@@ -14,4 +14,9 @@ build: [
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-plugin-frontc_parser"]
         ["bapbundle" "remove" "frontc_parser.plugin"]]
-depends: ["bap-std" "bap-c" "FrontC"]
+depends: [
+  "bap-std"            {= "master"}
+  "bap-c"
+  "FrontC"
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

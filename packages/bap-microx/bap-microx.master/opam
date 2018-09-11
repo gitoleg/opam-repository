@@ -13,4 +13,7 @@ build: [
 ]
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-microx"]]
-depends: ["bap-std"]
+depends: [
+  "bap-std"           {= "master"}
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

@@ -22,9 +22,10 @@ remove: [
 ]
 
 depends: [
-    "bap-std"
+    "bap-std"           {= "master"}
     "bap-abi"
     "bap-c"
     "bap-llvm"
     "cmdliner"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
