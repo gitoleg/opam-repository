@@ -4,7 +4,6 @@ maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 homepage: "http://llvm.org"
 authors: "The LLVM Team"
 bug-reports: "https://llvm.org/bugs/"
-dev-repo: "https://github.com/ocaml/opam-repository.git"
 license: "BSD"
 build: [
   ["bash" "-ex" "configure"]
@@ -14,7 +13,7 @@ depends: [
 ]
 
 depexts: [
-  [["debian"] ["llvm-3.4-dev"]]
+  [["debian"] ["llvm-3.8-dev"]]
   [["ubuntu"] ["llvm-3.8-dev"]]
   [["osx" "macports"] ["llvm-3.8"]]
   [["osx" "homebrew"] ["homebrew/versions/llvm38"]]
