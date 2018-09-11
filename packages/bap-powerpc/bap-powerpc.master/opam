@@ -20,6 +20,7 @@ remove: [["ocamlfind" "remove" "bap-plugin-powerpc"]
 depends: [
     "bap-abi"
     "bap-c"
-    "bap-primus"
+    "bap-primus"        {= "master"}
     "zarith"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

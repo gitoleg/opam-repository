@@ -18,5 +18,6 @@ remove: [["ocamlfind" "remove" "bap-plugin-trivial_condition_form"]
          ["bapbundle" "remove" "trivial_condition_form.plugin"]]
 
 depends: [
-  "bap-std"
+  "bap-std"           {= "master"}
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

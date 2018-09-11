@@ -21,4 +21,8 @@ remove: [["ocamlfind" "remove" "bap-taint"]
   ["bapbundle" "remove" "primus_taint.plugin"]
 ]
 
-depends: ["bap-std" "bap-primus" "cmdliner"]
+depends: [
+  "bap-std"     {= "master"}
+  "bap-primus"  {= "master"}
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

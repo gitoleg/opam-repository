@@ -23,6 +23,7 @@ remove: [
 depends: [
     "core_kernel"       {>= "113.24.00"}
     "oasis"             {build & = "0.4.7"}
-    "bap-std"
+    "bap-std"           {= "master"}
     "cmdliner"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

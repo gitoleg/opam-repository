@@ -21,6 +21,7 @@ remove: [
         ]
 
 depends: [
-    "bap-std"
-    "bap-primus"
+    "bap-std"           {= "master"}
+    "bap-primus"        {= "master"}
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

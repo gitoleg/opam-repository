@@ -21,7 +21,8 @@ remove: [
         ]
 
 depends: [
-    "bap-std"
+    "bap-std"           {= "master"}
     "bap-demangle"
     "text-tags"
 ]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]

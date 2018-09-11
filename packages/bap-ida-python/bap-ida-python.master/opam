@@ -21,6 +21,6 @@ remove: [
     ["rm" "-f" "%{conf-ida:path}%/cfg/bap.cfg"]
 ]
 depends: [
-    "bap"
+    "bap"       {= "master"}
     "conf-ida"
 ]

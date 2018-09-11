@@ -17,4 +17,8 @@ remove: [["ocamlfind" "remove" "bap-plugin-api"]
          ["bapbundle" "remove" "api.plugin"]
          ["rm" "-rf" "%{prefix}%/share/bap-api/c"]
          ]
-depends: ["bap-std" "cmdliner"]
+depends: [
+  "bap-std"           {= "master"}
+  "cmdliner"
+]
+available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
