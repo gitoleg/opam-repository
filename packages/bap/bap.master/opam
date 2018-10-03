@@ -19,6 +19,7 @@ depends: [
     "bap-cache" {= "master"}
     "bap-cxxfilt" {= "master"}
     "bap-callsites" {= "master"}
+    "bap-constant-tracker" {= "master"}
     "bap-demangle" {= "master"}
     "bap-optimization" {= "master"}
     "bap-dump-symbols" {= "master"}
