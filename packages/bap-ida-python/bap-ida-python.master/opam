@@ -12,6 +12,7 @@ substs: [
 ]
 install: [
     ["cp" "-v" "plugins/plugin_loader_bap.py" "%{conf-ida:path}%/plugins/"]
+    ["rm" "-rf" "%{conf-ida:path}%/plugins/bap/"]
     ["cp" "-rv" "plugins/bap" "%{conf-ida:path}%/plugins/bap"]
     ["cp" "-v" "bap.cfg" "%{conf-ida:path}%/cfg/"]
 ]
