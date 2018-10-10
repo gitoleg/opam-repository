@@ -31,7 +31,7 @@ depends: [
     "bap-std"           {= "master"}
     "cmdliner"
     "conf-env-travis"
-    "conf-bap-llvm" {>= "1.1"}
+    "conf-bap-llvm" {>= "1.1" & <= "1.3"}
     "ogre"
     "monads"
 ]

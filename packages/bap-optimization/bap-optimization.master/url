@@ -1,2 +1,1 @@
-archive: "https://github.com/gitoleg/bap/archive/1.5.0.zip"
-checksum: "e74f04958ae548bfd834331beb28a94d"
+src: "git://github.com/BinaryAnalysisPlatform/bap#master"
