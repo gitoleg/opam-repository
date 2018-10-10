@@ -5,6 +5,7 @@ maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "Ivan Gotovchits <ivg@ieee.org>"
 homepage: "https://github.com/ivg/emacs-dot/"
 bug-reports: "https://github.com/ivg/emacs-dot/issues"
+dev-repo: "https://github.com/ivg/emacs-dot/"
 license: "MIT"
 install: [
   ["mkdir" "-p" "%{share}%/emacs/site-lisp"]

@@ -5,6 +5,7 @@ maintainer: "Thomas Barabosch"
 authors: "Thomas Barabosch"
 homepage: "https://github.com/fkie-cad/bap-mode"
 bug-reports: "https://github.com/fkie-cad/bap-mode/issues"
+dev-repo: "https://github.com/fkie-cad/bap-mode"
 license: "MIT"
 install: [
   ["mkdir" "-p" "%{share}%/emacs/site-lisp"]
