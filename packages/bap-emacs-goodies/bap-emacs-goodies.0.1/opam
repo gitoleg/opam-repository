@@ -3,7 +3,7 @@ name: "bap-emacs-goodies"
 version: "0.1"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: [
-  "Thomas Barabosch"
+  "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
   "Ivan Gotovchits <ivg@ieee.org>"
 ]
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
