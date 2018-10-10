@@ -1,4 +1,4 @@
-A collection of Emacs modes for work with BAP
+A collection of useful Emacs tools for BAP
 
 bap-mode
 Emacs major mode for reading and analyzing programs in BAP's IR.

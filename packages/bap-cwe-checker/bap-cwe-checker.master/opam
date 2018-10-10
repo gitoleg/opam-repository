@@ -4,20 +4,19 @@ version: "master"
 maintainer: "Thomas Barabosch"
 authors: "Thomas Barabosch"
 homepage: "https://github.com/fkie-cad/cwe_checker"
-bug-reports: "https://github.com/fkie-cad/cwe_checker"
+bug-reports: "https://github.com/fkie-cad/cwe_checker/issues"
 license: "LGPL-3.0"
 install: [
   ["make"]
-  ["mkdir" "-p" "%{share}%/bap-cwe-checker/"]
-  ["cp" "src/config.json" "%{share}%/bap-cwe-checker/"]
+  ["cp" "src/config.json" "%{share}%/bap/"]
 ]
 
 remove: [
   ["make" "uninstall"]
-  ["rm" "-r" "%{share}%/bap-cwe-checker/"]
+  ["rm" "-r" "%{share}%/bap/config.json"]
 ]
 
 depends: [
-  "bap"
+  "bap"  {= "1.5.0"}
   "yojson"
 ]
