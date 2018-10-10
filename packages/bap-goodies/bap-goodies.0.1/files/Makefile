@@ -15,7 +15,6 @@ bap-goodies.el: bap-mode.el emacs-dot.el
 	@echo "(load \"dot\")" >> bap-goodies.el
 
 mkpath:
-	echo "test $(OPAMSHARE)"
 	@test -d $(OPAMSHARE) || mkdir -p $(OPAMSHARE)
 
 install: mkpath bap-goodies.el
