@@ -17,6 +17,7 @@ depends: [
     "bap-byteweight" {= "master"}
     "bap-c" {= "master"}
     "bap-cache" {= "master"}
+    "bap-cwe-checker" {= "0.1"}
     "bap-cxxfilt" {= "master"}
     "bap-callsites" {= "master"}
     "bap-constant-tracker" {= "master"}
@@ -54,6 +55,7 @@ depends: [
     "bap-trivial-condition-form" {= "master"}
     "bap-warn-unused" {= "master"}
     "bap-x86" {= "master"}
+    "bap-emacs-goodies"
 ]
 
 available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
