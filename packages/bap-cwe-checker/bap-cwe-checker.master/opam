@@ -17,6 +17,6 @@ remove: [
 ]
 
 depends: [
-  "bap-std"  {= "master"}
-  "yojson" {= "1.4.1"}
+  "bap-std"  {>= "1.5.0"}
+  "yojson"   {= "1.4.1"}
 ]
