@@ -13,7 +13,7 @@ config=${LLVM_CONFIG}
 
 if ! which "$config" ; then
     config="llvm-config"
-    versions="3.4 3.8 4.0 5.0 6.0"
+    versions="3.4 3.8 4.0 5.0 6.0 7.0"
 
     for version in $versions; do
 
