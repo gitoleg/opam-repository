@@ -26,4 +26,4 @@ depends: [
     "bitstring" {>= "3.0.0"}
 ]
 
-available: [ ocaml-version >= "4.04.1" & ocaml-version < "4.06" ]
+available: [ ocaml-version >= "4.05.0" & ocaml-version < "4.06" ]
