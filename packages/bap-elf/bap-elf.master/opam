@@ -21,10 +21,9 @@ remove: [
 ]
 
 depends: [
-    "bap-std"            {= "master"}
+    "bap-std"   {= "master"}
     "bap-dwarf"
-    "camlp4"
-    "bitstring"
+    "bitstring" {>= "3.0.0"}
 ]
 
 available: [ ocaml-version >= "4.04.1" & ocaml-version < "4.06" ]
