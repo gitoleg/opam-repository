@@ -1,0 +1,23 @@
+opam-version: "1.2"
+name: "bap-cwe-checker"
+version: "0.1"
+maintainer: "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
+authors: "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
+homepage: "https://github.com/fkie-cad/cwe_checker"
+bug-reports: "https://github.com/fkie-cad/cwe_checker/issues"
+dev-repo: "https://github.com/fkie-cad/cwe_checker"
+license: "LGPL-3.0"
+install: [
+  [make]
+  ["cp" "src/config.json" "%{share}%/bap/"]
+]
+
+remove: [
+  [make "uninstall"]
+  ["rm" "-r" "%{share}%/bap/config.json"]
+]
+
+depends: [
+  "bap-std"  {>= "1.5.0"}
+  "yojson"   {= "1.4.1"}
+]

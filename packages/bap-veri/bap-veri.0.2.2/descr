@@ -1,1 +1,5 @@
-BAP verification tool
+BAP Instruction Semantics Verification Tool
+
+Verifies that our understaning of instruction semantics is correct, or
+at least the same as in QEMU by checking if our execution bisimulates
+the QEMU.

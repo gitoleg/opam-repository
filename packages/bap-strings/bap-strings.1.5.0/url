@@ -1,0 +1,5 @@
+archive: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
+checksum: "9eed04fda6610dd4a8aa83948abfffc3"
+mirrors: [
+         "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+]
