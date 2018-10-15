@@ -25,7 +25,7 @@ depends: [
   "bap-primus" {= "1.5.0"}
 ]
 synopsis:
-  "Provides a set of operations to store and manipulate interval trees."
+  "Provides a set of operations to store and manipulate interval trees"
 url {
   src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
   checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"

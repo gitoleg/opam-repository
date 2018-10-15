@@ -5,7 +5,7 @@ maintainer: "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
 authors: "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
 homepage: "https://github.com/fkie-cad/cwe_checker"
 bug-reports: "https://github.com/fkie-cad/cwe_checker/issues"
-dev-repo: "https://github.com/fkie-cad/cwe_checker"
+dev-repo: "git+https://github.com/fkie-cad/cwe_checker"
 license: "LGPL-3.0"
 install: [
   [make]
@@ -23,7 +23,7 @@ depends: [
   "yojson" {= "1.4.1"}
 ]
 synopsis:
-  "Detects common bug classes such as use of dangerous functions and simple integer overflows."
+  "Detects common bug classes such as use of dangerous functions and simple integer overflows"
 description: """
 These bug classes are formally known as Common Weakness Enumerations (CWEs).
 Its main goal is to aid analysts to quickly find vulnerable code paths."""
