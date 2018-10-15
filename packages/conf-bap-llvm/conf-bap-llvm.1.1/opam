@@ -16,6 +16,6 @@ depexts: [
   ["llvm-3.4-dev"] {os-distribution = "debian"}
   ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
   ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
-  ["homebrew/versions/llvm38"] {os = "macos" & os-distribution = "homebrew"}
+  ["llvm4"] {os = "macos" & os-distribution = "homebrew"}
 ]
 extra-files: ["configure" "md5=8b655d55580e497b799fb97d047dc15d"]

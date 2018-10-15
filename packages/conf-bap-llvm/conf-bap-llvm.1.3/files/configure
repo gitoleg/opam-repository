@@ -9,7 +9,7 @@
 # Note - suffix `-mp-` stands for macports, and will work on macs
 # if used with macports.
 
-config=${LLVM_CONFIG}
+config=${LLVM_CONFIG:-`opam config var llvm-config`}
 
 if ! which "$config" ; then
     config="llvm-config"

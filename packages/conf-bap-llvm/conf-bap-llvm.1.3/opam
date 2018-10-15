@@ -16,9 +16,18 @@ depexts: [
   ["llvm-3.8-dev"] {os-distribution = "debian"}
   ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
   ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
-  ["homebrew/versions/llvm38"] {os = "macos" & os-distribution = "homebrew"}
+  ["llvm6"] {os = "macos" & os-distribution = "homebrew"}
 ]
 extra-files: [
-  ["configure" "md5=aea6c990ace621f1739b8a077fb58a04"]
-  ["#configure#" "md5=1396ce48cfb5e965cd809f45405884a2"]
+  ["configure" "md5=9ab6fac2c42b16bdc28d76411c831227"]
 ]
+
+synopsis: "Checks that supported version of LLVM is installed."
+description: """
+Supported LLVM versions are: 3.4 3.8 4.0 5.0 6.0 7.0
+
+A prefered version can be set via `opam config set llvm-config VERSION`
+OR by setting LLVM_CONFIG environment variable.
+Note, that the later supersedes the former.
+
+"""
