@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "bap-optimization"
 version: "1.5.0"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
@@ -15,7 +15,19 @@ install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-plugin-optimization"]
          ["bapbundle" "remove" "optimization.plugin"]]
 depends: [
-  "bap-std"           {= "1.5.0"}
+  "ocaml" {>= "4.03" & < "4.06"}
+  "bap-std" {= "1.5.0"}
   "cmdliner"
 ]
-available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
+synopsis: "A BAP plugin that removes dead IR code"
+description: """
+An pass that conservatively removes dead code in the generated IR. The
+removed dead code is usually produced by a lifter, though it might be
+possible that a binary indeed contains a dead code. The algorithm
+doesn't remove variables that are stored in memory, only registers are
+considered."""
+url {
+  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
+  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
+  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+}

@@ -33,8 +33,8 @@ find_command() {
 
 # can be very slow
 locate_linux() {
-    results=`locate -w -r 'idaq64$' | sort -n -r`
-
+    echo "Trying to locate IDA. It can take some time, consider to set IDA_PATH, e.g. IDA_PATH=/home/me/ida/idaq64"
+    results=`find / -name idaq64 2>/dev/null | sort -n -r`
     for path in $results; do
         if [ -x $path ]; then
             IDA_PATH=`dirname ${path}`
@@ -60,7 +60,7 @@ locate_macos() {
 }
 
 
-find() {
+which_ida() {
     if [ -z $IDA_PATH ]; then
         find_command "idaq64"
     fi
@@ -70,14 +70,14 @@ HEADLESS=false
 
 case $1 in
     linux)
-        find
+        which_ida
         [ $IDA_PATH ] || locate_linux
         if [ -z $DISPLAY ]; then
             HEADLESS=true
         fi
         ;;
     darwin)
-        find
+        which_ida
         [ $IDA_PATH ] || locate_macos
         ;;
     *)

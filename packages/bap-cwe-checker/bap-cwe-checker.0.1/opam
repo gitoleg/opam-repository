@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "bap-cwe-checker"
 version: "0.1"
 maintainer: "Thomas Barabosch <thomas.barabosch@fkie.fraunhofer.de>"
@@ -18,6 +18,16 @@ remove: [
 ]
 
 depends: [
-  "bap-std"  {>= "1.5.0"}
-  "yojson"   {= "1.4.1"}
+  "ocaml"
+  "bap-std" {>= "1.5.0"}
+  "yojson" {= "1.4.1"}
 ]
+synopsis:
+  "Detects common bug classes such as use of dangerous functions and simple integer overflows."
+description: """
+These bug classes are formally known as Common Weakness Enumerations (CWEs).
+Its main goal is to aid analysts to quickly find vulnerable code paths."""
+url {
+  src: "https://github.com/fkie-cad/cwe_checker/archive/v0.1.tar.gz"
+  checksum: "md5=16a1bf6646095151c23267681a7f457e"
+}

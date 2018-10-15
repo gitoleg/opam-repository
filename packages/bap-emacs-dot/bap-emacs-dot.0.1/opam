@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "bap-emacs-dot"
 version: "0.1"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
@@ -13,3 +13,10 @@ install: [
 ]
 
 remove: [["rm" "%{share}%/emacs/site-lisp/dot.el"]]
+synopsis:
+  "Will automatically detect graph specifications in a dot syntax and display them using overlaying."
+depends: ["ocaml"]
+flags: light-uninstall
+url {
+  src: "git://github.com/ivg/emacs-dot.git"
+}

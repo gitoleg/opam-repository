@@ -1,4 +1,0 @@
-Detects common bug classes such as use of dangerous functions and simple integer overflows.
-
-These bug classes are formally known as Common Weakness Enumerations (CWEs).
-Its main goal is to aid analysts to quickly find vulnerable code paths.

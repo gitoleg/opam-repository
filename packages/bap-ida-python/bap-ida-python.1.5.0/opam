@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "bap-ida-python"
 version: "1.5.0"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
@@ -22,8 +22,15 @@ remove: [
     ["rm" "-f" "%{conf-ida:path}%/cfg/bap.cfg"]
 ]
 depends: [
-    "bap"       {= "1.5.0"}
-    "conf-ida"
+  "ocaml" {>= "4.03" & < "4.06"}
+  "bap" {= "1.5.0"}
+  "conf-ida"
 ]
-
-available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
+synopsis: "A BAP - IDA Pro integration library"
+flags: light-uninstall
+extra-files: ["bap.cfg.in" "md5=aec3a830555380469b523da74daef069"]
+url {
+  src:
+    "https://github.com/BinaryAnalysisPlatform/bap-ida-python/archive/v1.5.0.tar.gz"
+  checksum: "md5=88b4041d764c0f9c0375235d9e94ad6f"
+}

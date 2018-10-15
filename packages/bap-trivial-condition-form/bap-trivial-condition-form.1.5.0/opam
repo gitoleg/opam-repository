@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "bap-trivial-condition-form"
 version: "1.5.0"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
@@ -18,6 +18,17 @@ remove: [["ocamlfind" "remove" "bap-plugin-trivial_condition_form"]
          ["bapbundle" "remove" "trivial_condition_form.plugin"]]
 
 depends: [
-  "bap-std"           {= "1.5.0"}
+  "ocaml" {>= "4.03" & < "4.06"}
+  "bap-std" {= "1.5.0"}
 ]
-available: [ ocaml-version >= "4.03" & ocaml-version < "4.06" ]
+synopsis: "Eliminates complex conditionals in branches."
+description: """
+Ensures that all branching conditions are either a variable
+or a constant. We call such representation a Trivial Condition Form
+(TCF). During the translation all complex condition expressions are
+hoisted into the assignemnt section of a block."""
+url {
+  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
+  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
+  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+}

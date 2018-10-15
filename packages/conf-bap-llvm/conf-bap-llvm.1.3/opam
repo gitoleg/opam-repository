@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 version: "1.3"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 homepage: "http://llvm.org"
@@ -9,12 +9,16 @@ build: [
   ["bash" "-ex" "configure"]
 ]
 depends: [
+  "ocaml"
   "conf-which" {build}
 ]
-
 depexts: [
-  [["debian"] ["llvm-3.8-dev"]]
-  [["ubuntu"] ["llvm-3.8-dev"]]
-  [["osx" "macports"] ["llvm-3.8"]]
-  [["osx" "homebrew"] ["homebrew/versions/llvm38"]]
+  ["llvm-3.8-dev"] {os-distribution = "debian"}
+  ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
+  ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
+  ["homebrew/versions/llvm38"] {os = "macos" & os-distribution = "homebrew"}
+]
+extra-files: [
+  ["configure" "md5=aea6c990ace621f1739b8a077fb58a04"]
+  ["#configure#" "md5=1396ce48cfb5e965cd809f45405884a2"]
 ]
