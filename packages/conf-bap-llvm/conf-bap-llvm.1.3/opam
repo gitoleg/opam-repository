@@ -13,10 +13,19 @@ depends: [
   "conf-which" {build}
 ]
 depexts: [
-  ["llvm-3.8-dev"] {os-distribution = "debian"}
-  ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
+
+  # debian
+  ["llvm-4.0-dev"] {os-distribution = "debian" & os-version >= "8" & os-version < "9"}  #jessie
+  ["llvm-4.0-dev"] {os-distribution = "debian" & os-version >= "9" & os-version < "10"} #stretch
+
+  # ubuntu
+  ["llvm-3.8-dev"] {os-distribution = "ubuntu" & os-version = "14.04"} #trusty
+  ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "16.04"} #xenial
+  ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "18.04"} #bionic
+
+  # macos
   ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
-  ["llvm6"] {os = "macos" & os-distribution = "homebrew"}
+  ["llvm6"]    {os = "macos" & os-distribution = "homebrew"}
 ]
 extra-files: [
   ["configure" "md5=9ab6fac2c42b16bdc28d76411c831227"]
