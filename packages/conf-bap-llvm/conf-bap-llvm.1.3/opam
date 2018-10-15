@@ -26,7 +26,7 @@ depexts: [
   ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
   ["llvm6"]    {os = "macos" & os-distribution = "homebrew"}
 ]
-extra-files: ["configure" "md5=7d52f64b72e5abcf9153d3d3c640f74b"]
+extra-files: ["configure" "md5=d4847cb2b3190bcb946f6a593baaffc8"]
 
 synopsis: "Checks that supported version of LLVM is installed"
 description: """
