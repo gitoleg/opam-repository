@@ -15,8 +15,7 @@ depends: [
 depexts: [
 
   # debian
-  ["llvm-4.0-dev"] {os-distribution = "debian" & os-version >= "8" & os-version < "9"}  #jessie
-  ["llvm-4.0-dev"] {os-distribution = "debian" & os-version >= "9" & os-version < "10"} #stretch
+  ["llvm-4.0-dev"] {os-distribution = "debian"}
 
   # ubuntu
   ["llvm-3.8-dev"] {os-distribution = "ubuntu" & os-version = "14.04"} #trusty
@@ -24,7 +23,7 @@ depexts: [
   ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "18.04"} #bionic
 
   # macos
-  ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
+  ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
   ["llvm6"]    {os = "macos" & os-distribution = "homebrew"}
 ]
 extra-files: [
