@@ -32,8 +32,8 @@ synopsis: "Checks that supported version of LLVM is installed"
 description: """
 Supported LLVM versions are: 3.4 3.8 4.0 5.0 6.0 7.0
 
-A prefered version can be set via `opam config set llvm-config VERSION`
+A preferred llvm-config can be choosen by setting opam config variable:
+$: opam config set llvm-config your-llvm-config
 OR by setting LLVM_CONFIG environment variable.
 Note, that the later supersedes the former.
-
 """
