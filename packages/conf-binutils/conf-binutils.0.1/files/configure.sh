@@ -65,6 +65,9 @@ fi
 
 
 cat > conf-binutils.config <<EOF
-objdump: "${OBJDUMP}"
-targets: "[${TARGETS}]"
+opam-version: "2.0.0"
+variables {
+  objdump: "${OBJDUMP}"
+  targets: "[${TARGETS}]"
+}
 EOF
