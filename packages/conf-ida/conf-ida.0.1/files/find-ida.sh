@@ -91,6 +91,9 @@ if [ -z $IDA_PATH ]; then
 fi
 
 cat > conf-ida.config <<EOF
-path: "$IDA_PATH"
-headless: $HEADLESS
+opam-version: "2.0.0"
+variables {
+  path: "$IDA_PATH"
+  headless: $HEADLESS
+}
 EOF

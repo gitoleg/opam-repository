@@ -16,4 +16,4 @@ Can be hinted with IDA_PATH environment variable, e.g.,
 
 IDA_PATH=<path-to-ida> opam install conf-ida"""
 depends: ["ocaml"]
-extra-files: ["find-ida.sh" "md5=dce6138a3e0c04821b49ee3d118248f6"]
+extra-files: ["find-ida.sh" "md5=40c3c55d6e75b767bc9cdc4f4e25f8d1"]

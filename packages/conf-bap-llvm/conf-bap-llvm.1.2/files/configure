@@ -45,6 +45,9 @@ else
 fi
 
 cat > conf-bap-llvm.config <<EOF
-config: "$config"
-package-version: "$version"
+opam-version: "2.0.0"
+variables {
+  config: "$config"
+  package-version: "$version"
+}
 EOF

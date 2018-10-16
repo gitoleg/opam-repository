@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Use llvm-config OPAM variable if set, LLVM_CONFIG env variable otherwise
+
 # if LLVM_CONFIG variable doesn't explicitly specify which llvm-config
 # we should use, then we will search across all possible llvm-configs
 # that might work for us.  Our search strategy is to try to pick up
@@ -9,7 +11,10 @@
 # Note - suffix `-mp-` stands for macports, and will work on macs
 # if used with macports.
 
-config=${LLVM_CONFIG:-`opam config var llvm-config 2>/dev/null`}
+config=`opam config var llvm-config 2>/dev/null` || true
+if [ -z $config ]; then
+    config=$LLVM_CONFIG
+fi
 
 if ! which "$config" ; then
     config="llvm-config"
@@ -45,6 +50,9 @@ else
 fi
 
 cat > conf-bap-llvm.config <<EOF
-config: "$config"
-package-version: "$version"
+opam-version: "2.0.0"
+variables {
+  config: "$config"
+  package-version: "$version"
+}
 EOF

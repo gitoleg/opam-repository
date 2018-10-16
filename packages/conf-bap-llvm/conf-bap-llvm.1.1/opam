@@ -18,4 +18,4 @@ depexts: [
   ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
   ["llvm4"] {os = "macos" & os-distribution = "homebrew"}
 ]
-extra-files: ["configure" "md5=8b655d55580e497b799fb97d047dc15d"]
+extra-files: ["configure" "md5=b6f5b837aa3954e850e56c15a3045ad8"]
