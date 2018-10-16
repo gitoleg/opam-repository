@@ -51,9 +51,9 @@ fi
 
 path=`which $config`
 if [ `opam config var os` = "linux" ]; then
-    checksum=`md5sum $path | cut -d' ' -f 1`
+    checksum=`md5sum $path | cut -d' ' -f 1` || true
 elif  [ `opam config var os` = "macos" ]; then
-    checksum=`md5 -q $path`
+    checksum=`md5 -q $path` || true
 else
     checksum=""
 fi

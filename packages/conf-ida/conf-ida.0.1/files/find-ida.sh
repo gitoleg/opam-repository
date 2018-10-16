@@ -85,13 +85,31 @@ case $1 in
     ;;
 esac
 
+checksum=""
 if [ -z $IDA_PATH ]; then
     echo "warning: failed to locate IDA Pro"
     IDA_PATH="undefined"
+else
+    if [ `opam config var os` = "linux" ]; then
+        checksum=`md5sum $IDA_PATH/idaq64 | cut -d' ' -f 1` || true
+    elif  [ `opam config var os` = "macos" ]; then
+        checksum=`md5 -q $IDA_PATH/idaq64` || true
+    else
+        checksum=""
+    fi
 fi
 
-cat > conf-ida.config <<EOF
+filename="conf-ida.config"
+
+cat > $filename <<EOF
 opam-version: "2.0.0"
+EOF
+
+if [ ! -z "$checksum" ]; then
+    echo "file-depends: [ [ \"$IDA_PATH/idaq64\" \"md5=$checksum\" ] ]" >> $filename
+fi
+
+cat >> $filename <<EOF
 variables {
   path: "$IDA_PATH"
   headless: $HEADLESS

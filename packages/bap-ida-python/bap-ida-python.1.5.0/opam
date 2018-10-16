@@ -11,15 +11,13 @@ substs: [
     "bap.cfg"
 ]
 install: [
-    ["cp" "-v" "plugins/plugin_loader_bap.py" "%{conf-ida:path}%/plugins/"]
-    ["rm" "-rf" "%{conf-ida:path}%/plugins/bap/"]
-    ["cp" "-rv" "plugins/bap" "%{conf-ida:path}%/plugins/bap"]
-    ["cp" "-v" "bap.cfg" "%{conf-ida:path}%/cfg/"]
+    ["mkdir" "-p" "%{prefix}%/share/%{name}%/"]
+    ["cp" "-v"  "plugins/plugin_loader_bap.py" "%{prefix}%/share/%{name}%/"]
+    ["cp" "-rv" "plugins/bap" "%{prefix}%/share/%{name}%/"]
+    ["cp" "-v"  "bap.cfg" "%{prefix}%/share/%{name}%/"]
 ]
 remove: [
-    ["rm" "-f" "%{conf-ida:path}%/plugins/plugin_loader_bap.py"]
-    ["rm" "-rf" "%{conf-ida:path}%/plugins/bap/"]
-    ["rm" "-f" "%{conf-ida:path}%/cfg/bap.cfg"]
+    ["rm" "-rf" "%{prefix}%/share/%{name}%/"]
 ]
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
@@ -34,3 +32,12 @@ url {
     "https://github.com/BinaryAnalysisPlatform/bap-ida-python/archive/v1.5.0.tar.gz"
   checksum: "md5=88b4041d764c0f9c0375235d9e94ad6f"
 }
+
+post-messages: [
+  "In order to install bap-ida-python plugin:
+    $: rm -rf %{conf-ida:path}%/plugins/bap/
+    $: cp %{prefix}%/share/%{name}%/plugin_loader_bap.py %{conf-ida:path}%/plugins/
+    $: cp -r %{prefix}%/share/%{name}%/bap %{conf-ida:path}%/plugins/
+    $: cp %{prefix}%/share/%{name}%/bap.cfg %{conf-ida:path}%/cfg/
+ "
+]
