@@ -13,9 +13,27 @@ depends: [
   "conf-which" {build}
 ]
 depexts: [
-  ["llvm-3.8-dev"] {os-distribution = "debian"}
-  ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
-  ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
-  ["llvm5"] {os = "macos" & os-distribution = "homebrew"}
+  # debian
+  ["llvm-4.0-dev"] {os-distribution = "debian"}
+
+  # ubuntu
+  ["llvm-3.8-dev"] {os-distribution = "ubuntu" & os-version = "14.04"} #trusty
+  ["llvm-5.0-dev"] {os-distribution = "ubuntu" & os-version = "16.04"} #xenial
+  ["llvm-5.0-dev"] {os-distribution = "ubuntu" & os-version = "18.04"} #bionic
+
+  # macos
+  ["llvm-5.0"] {os = "macos" & os-distribution = "macports"}
+  ["llvm5"]    {os = "macos" & os-distribution = "homebrew"}
+
 ]
-extra-files: ["configure" "md5=1c97decb19b81fbe64df454de638199f"]
+extra-files: ["configure" "md5=7039c3e880ff42331b9ce1d060a94eec"]
+
+synopsis: "Checks that supported version of LLVM is installed"
+description: """
+Supported LLVM versions are: 3.4 3.8 4.0 5.0
+
+A prefered version can be set via `opam config set llvm-config VERSION`
+OR by setting LLVM_CONFIG environment variable.
+Note, that the later supersedes the former.
+
+"""

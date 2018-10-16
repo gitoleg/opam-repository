@@ -14,7 +14,11 @@
 
 
 configs="llvm-config-3.4 llvm-config-mp-3.4 llvm-config-3.8 llvm-config-mp-3.8 llvm-config"
-config=${LLVM_CONFIG}
+
+config=`opam config var llvm-config 2>/dev/null` || true
+if [ -z $config ]; then
+    config=$LLVM_CONFIG
+fi
 
 if ! which "$config"; then
     for c in $configs; do
@@ -31,8 +35,25 @@ else
     version=`$config --version`
 fi
 
-cat > conf-bap-llvm.config <<EOF
+path=`which $config`
+if [ `opam config var os` = "linux" ]; then
+    checksum=`md5sum $path | cut -d' ' -f 1` || true
+elif  [ `opam config var os` = "macos" ]; then
+    checksum=`md5 -q $path` || true
+else
+    checksum=""
+fi
+
+filename="conf-bap-llvm.config"
+cat > $filename <<EOF
 opam-version: "2.0.0"
+EOF
+
+if [ ! -z "$checksum" ]; then
+    echo "file-depends: [ [ \"$path\" \"md5=$checksum\" ] ]" >> $filename
+fi
+
+cat >> $filename <<EOF
 variables {
   config: "$config"
   package-version: "$version"

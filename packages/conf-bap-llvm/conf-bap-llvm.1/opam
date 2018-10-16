@@ -12,10 +12,9 @@ depends: [
   "conf-which" {build}
 ]
 depexts: [
-  ["llvm-dev"] {os-distribution = "debian"}
-  ["llvm-dev"] {os-distribution = "ubuntu"}
-  ["llvm-3.4"] {os = "macos" & os-distribution = "macports"}
-  ["homebrew/versions/llvm34"] {os = "macos" & os-distribution = "homebrew"}
+  ["llvm-3.8-dev"] {os-distribution = "debian"}
+  ["llvm-3.8-dev"] {os-distribution = "ubuntu"}
+  ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
 ]
 conflicts: ["conf-llvm"]
-extra-files: ["configure" "md5=245c31e0d1bc5e45ae08859613d3886f"]
+extra-files: ["configure" "md5=3b4512d4836da4bd730bdea584bcf63b"]

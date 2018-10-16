@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Use llvm-config OPAM variable if set, LLVM_CONFIG env variable otherwise
+# Uses llvm-config OPAM variable if set, LLVM_CONFIG env variable otherwise
 
 # if LLVM_CONFIG variable doesn't explicitly specify which llvm-config
 # we should use, then we will search across all possible llvm-configs
