@@ -45,7 +45,7 @@ collect_targets() {
 if   [ "is_$1" = "is_linux" ]; then
     OBJDUMP=`which objdump`
     OBJDUMPS=`locate -r 'objdump$'`
-elif [ "is_$1" = "is_darwin" ]; then
+elif [ "is_$1" = "is_macos" ]; then
     OBJDUMP=`which gobjdump`
     OBJDUMPS=`mdfind -name objdump`
 else
