@@ -24,7 +24,7 @@ depexts: [
 
   # macos
   ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
-  ["llvm6"]    {os = "macos" & os-distribution = "homebrew"}
+  ["llvm@6"]   {os = "macos" & os-distribution = "homebrew"}
 ]
 extra-files: ["configure" "md5=cd5d1c777a2f1ccad148a40ff3431043"]
 

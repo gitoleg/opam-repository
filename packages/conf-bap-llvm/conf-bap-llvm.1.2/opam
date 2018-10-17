@@ -23,7 +23,7 @@ depexts: [
 
   # macos
   ["llvm-5.0"] {os = "macos" & os-distribution = "macports"}
-  ["llvm5"]    {os = "macos" & os-distribution = "homebrew"}
+  ["llvm@5"]   {os = "macos" & os-distribution = "homebrew"}
 
 ]
 extra-files: ["configure" "md5=7039c3e880ff42331b9ce1d060a94eec"]
