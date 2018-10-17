@@ -23,7 +23,7 @@ depends: [
   "bap-callsites" {= "1.5.0"}
   "bap-constant-tracker" {= "1.5.0"}
   "bap-demangle" {= "1.5.0"}
-  "bap-optimization" {= "1.5.0"}
+  "bap-explicit-edge" {= "0.1"}
   "bap-dump-symbols" {= "1.5.0"}
   "bap-frontend" {= "1.5.0"}
   "bap-frontc" {= "1.5.0"}
@@ -32,6 +32,7 @@ depends: [
   "bap-microx" {= "1.5.0"}
   "bap-mips" {= "1.5.0"}
   "bap-objdump" {= "1.5.0"}
+  "bap-optimization" {= "1.5.0"}
   "bap-powerpc" {= "1.5.0"}
   "bap-primus" {= "1.5.0"}
   "bap-primus-dictionary" {= "1.5.0"}
@@ -54,6 +55,7 @@ depends: [
   "bap-trace" {= "1.5.0"}
   "bap-traces" {= "1.5.0"}
   "bap-trivial-condition-form" {= "1.5.0"}
+  "bap-vsa" {= "0.1"}
   "bap-warn-unused" {= "1.5.0"}
   "bap-x86" {= "1.5.0"}
   "bap-emacs-goodies"

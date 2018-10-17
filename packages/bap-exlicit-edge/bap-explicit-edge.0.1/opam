@@ -17,7 +17,7 @@ depends: [
   "bap-std" {= "1.5.0"}
   "bap-vsa"
 ]
-synopsis: "Bap plugin that intends to resolve indirect jumps in CFG"
+synopsis: "CFG edge reconstruction algorithm based on VSA"
 description: """
 This plugin is intended to utilize the results of value-set analysis to complete
 a program's CFG by replacing indirect jumps with direct ones where possible.
@@ -26,5 +26,6 @@ jumps when the possible targets can be reduced to a sufficiently small number.
 """
 
 url {
-  src: "git://github.com/draperlaboratory/cbat_tools.git"
+  src: "https://github.com/draperlaboratory/cbat_tools/archive/v0.1.tar.gz"
+  checksum: "md5=f0cce621aba8c83277a54c11f7b3fc67"
 }
