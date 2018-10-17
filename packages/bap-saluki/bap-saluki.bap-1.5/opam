@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-saluki"
-version: "1.0.0~alpha"
+version: "bap-1.5"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap-plugins/"
@@ -21,5 +21,6 @@ reducing the need for manual auditing of binaries. Prop- erties are
 formally verified over a program model which abstracts the concrete
 program."""
 url {
-  src: "git://github.com/BinaryAnalysisPlatform/bap-plugins.git"
+  src: "https://github.com/BinaryAnalysisPlatform/bap-plugins/archive/bap-1.5.tar.gz"
+  checksum: "md5=703c7f04f24dc3a543088d166e610abd"
 }
