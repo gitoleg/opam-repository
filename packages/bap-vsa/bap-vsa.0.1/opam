@@ -1,0 +1,29 @@
+opam-version: "2.0"
+name: "bap-vsa"
+version: "0.1"
+maintainer: "The Charles Stark Draper Laboratory, Inc. <github@draper.com>"
+authors: "The Charles Stark Draper Laboratory, Inc. <github@draper.com>"
+homepage: "https://github.com/draperlaboratory/cbat_tools/"
+bug-reports: "https://github.com/draperlaboratory/cbat_tools/issues"
+dev-repo: "git+https://github.com/draperlaboratory/cbat_tools"
+license: "MIT"
+build: [
+  [make "-C" "value_set"]
+]
+install: [[make "install" "-C" "value_set"]]
+remove: [[make "uninstall" "-C" "value_set"]]
+depends: [
+  "ocaml" {>= "4.03" & < "4.06"}
+  "bap-std" {= "1.5.0"}
+]
+synopsis: "Value set analysis"
+
+description: """
+Implements VSA for the purpose of recovering the full control flow graph
+from a program with indirect jumps. It uses circular linear progressions
+to abstract over sets of possible values.
+"""
+
+url {
+  src: "git://github.com/draperlaboratory/cbat_tools.git"
+}
