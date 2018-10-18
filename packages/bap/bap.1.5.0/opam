@@ -18,12 +18,10 @@ depends: [
   "bap-byteweight" {= "1.5.0"}
   "bap-c" {= "1.5.0"}
   "bap-cache" {= "1.5.0"}
-  "bap-cwe-checker" {= "0.1"}
   "bap-cxxfilt" {= "1.5.0"}
   "bap-callsites" {= "1.5.0"}
   "bap-constant-tracker" {= "1.5.0"}
   "bap-demangle" {= "1.5.0"}
-  "bap-explicit-edge" {= "0.1"}
   "bap-dump-symbols" {= "1.5.0"}
   "bap-frontend" {= "1.5.0"}
   "bap-frontc" {= "1.5.0"}
@@ -55,7 +53,6 @@ depends: [
   "bap-trace" {= "1.5.0"}
   "bap-traces" {= "1.5.0"}
   "bap-trivial-condition-form" {= "1.5.0"}
-  "bap-vsa" {= "0.1"}
   "bap-warn-unused" {= "1.5.0"}
   "bap-x86" {= "1.5.0"}
   "bap-emacs-goodies"

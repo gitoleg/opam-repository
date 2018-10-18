@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "bap-vsa"
+name: "cbat-explicit-edge"
 version: "0.1"
 maintainer: "The Charles Stark Draper Laboratory, Inc. <github@draper.com>"
 authors: "The Charles Stark Draper Laboratory, Inc. <github@draper.com>"
@@ -8,21 +8,21 @@ bug-reports: "https://github.com/draperlaboratory/cbat_tools/issues"
 dev-repo: "git+https://github.com/draperlaboratory/cbat_tools"
 license: "MIT"
 build: [
-  [make "-C" "value_set"]
+  [make "-C" "explicit_edge"]
 ]
-install: [[make "install" "-C" "value_set"]]
-remove: [[make "uninstall" "-C" "value_set"]]
+install: [[make "install" "-C" "explicit_edge"]]
+remove: [[make "uninstall" "-C" "explicit_edge"]]
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
   "bap-std" {= "1.5.0"}
-  "ppx_deriving"
+  "cbat-vsa"
 ]
-synopsis: "Value set analysis"
-
+synopsis: "VSA-based CFG edge reconstruction made in bap ecosystem"
 description: """
-Implements VSA for the purpose of recovering the full control flow graph
-from a program with indirect jumps. It uses circular linear progressions
-to abstract over sets of possible values.
+This plugin is intended to utilize the results of value-set analysis to complete
+a program's CFG by replacing indirect jumps with direct ones where possible.
+It does this by replacing each indirect jump with a sequence of conditional direct
+jumps when the possible targets can be reduced to a sufficiently small number.
 """
 
 url {
