@@ -33,8 +33,14 @@ find_command() {
 
 # can be very slow
 locate_linux() {
-    echo "Trying to locate IDA. It can take some time, consider to set IDA_PATH, e.g. IDA_PATH=/home/me/ida/idaq64"
+    echo "Searching for IDA installation on your machine, it might take some time.
+Consider passing the path via the opam configuration parameter, e.g
+opam config --set ida-path /home/path/to/ida"
+
     results=`find / -name idaq64 2>/dev/null | sort -n -r`
+    if [ -z $results ]; then
+        results=`find / -name idaq64 2>/dev/null | sort -n -r`
+    fi
     for path in $results; do
         if [ -x $path ]; then
             IDA_PATH=`dirname ${path}`
@@ -49,7 +55,6 @@ locate_macos() {
     results=`mdfind -name idaq | sort -n -r`
 
     for path in $results; do
-        echo "$path"
         app=`basename "${path}"`
 
         if [ "x$app" = "xidaq.app" ]; then
@@ -67,6 +72,11 @@ which_ida() {
 }
 
 HEADLESS=false
+
+CONFIG=`opam var ida-path 2>/dev/null` || true
+if [ ! -z $CONFIG ]; then
+    IDA_PATH=$CONFIG
+fi
 
 case $1 in
     linux)
@@ -87,8 +97,11 @@ esac
 
 checksum=""
 if [ -z $IDA_PATH ]; then
-    echo "warning: failed to locate IDA Pro"
-    IDA_PATH="undefined"
+    echo "error: failed to locate IDA Pro" >&2
+    exit 1
+elif [ ! -d $IDA_PATH ]; then
+    echo "error: no such directory $IDA_PATH, check opam config" >&2
+    exit 1
 else
     if [ `opam config var os` = "linux" ]; then
         checksum=`md5sum $IDA_PATH/idaq64 | cut -d' ' -f 1` || true

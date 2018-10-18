@@ -35,5 +35,4 @@ Supported LLVM versions are: 3.4 3.8 4.0 5.0 6.0 7.0
 A preferred llvm-config can be choosen by setting opam config variable:
 $: opam config set llvm-config your-llvm-config
 OR by setting LLVM_CONFIG environment variable.
-Note, that the later supersedes the former.
 """

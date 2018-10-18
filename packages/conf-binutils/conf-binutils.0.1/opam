@@ -26,4 +26,4 @@ depexts: [
 ]
 synopsis: "Checks that binutils are installed"
 depends: ["ocaml"]
-extra-files: ["configure.sh" "md5=d6f6a32656d22cd609402afb0372cef9"]
+extra-files: ["configure.sh" "md5=84e5c36f9781f19a6d326e00aaf70448"]

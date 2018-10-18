@@ -12,8 +12,12 @@ build: [
 ]
 synopsis: "Checks that IDA Pro is installed"
 description: """
-Can be hinted with IDA_PATH environment variable, e.g.,
+A path to ida can be hinted by setting opam config variable:
+$: opam config set ida-path path-to-ida
 
-IDA_PATH=<path-to-ida> opam install conf-ida"""
+Also can be hinted with IDA_PATH environment variable, e.g.,
+IDA_PATH=<path-to-ida> opam install conf-ida
+"""
+
 depends: ["ocaml"]
-extra-files: ["find-ida.sh" "md5=af5526bd3de671c31777bea7e95022d1"]
+extra-files: ["find-ida.sh" "md5=ff5bd477d0b7017f2f003c0e7b8fee70"]
