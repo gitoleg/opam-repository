@@ -8,8 +8,15 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["sh" "-x" "find-ida.sh" os]
+  ["ocaml" "unix.cma" "find-ida.ml" os]
 ]
+depends: [
+   "ocaml"
+   "base-unix"
+]
+substs: [ "find-ida.ml" ]
+flags: [ conf light-uninstall ]
+
 synopsis: "Checks that IDA Pro is installed"
 description: """
 A path to ida can be hinted by setting opam config variable:
@@ -18,6 +25,3 @@ $: opam config set ida-path <path-to-ida>
 Also can be hinted with IDA_PATH environment variable, e.g.,
 $: IDA_PATH=<path-to-ida> opam install conf-ida
 """
-
-depends: ["ocaml"]
-extra-files: ["find-ida.sh" "md5=ff5bd477d0b7017f2f003c0e7b8fee70"]

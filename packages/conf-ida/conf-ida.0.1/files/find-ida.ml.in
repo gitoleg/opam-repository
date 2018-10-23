@@ -1,0 +1,109 @@
+
+type sys =
+  | MacOs
+  | Linux
+  | Other of string
+
+let os = match Sys.argv.(1) with
+  | "macos" -> MacOs
+  | "linux" -> Linux
+  | s -> Other s
+
+let headless = os = Linux && Sys.getenv_opt "DISPLAY" = None
+
+let unix_cmd cmd =
+  let rec input_all acc inp =
+    let line =
+      try  Some (input_line inp)
+      with End_of_file -> None in
+    match line with
+    | None -> acc
+    | Some line -> input_all (line :: acc) inp in
+  try
+    let inp = Unix.open_process_in cmd in
+    let res = input_all [] inp in
+    let _ = Unix.close_process_in inp in
+    Some res
+  with _ -> None
+
+let which_ida () =
+  match unix_cmd "which idaq64" with
+  | Some (path :: _) -> Some path
+  | _ -> None
+
+let find_idaq64 path =
+  let cmd = Printf.sprintf
+      "find %s -executable -type f -name \"idaq64\" 2>/dev/null | sort -n -r" path in
+  unix_cmd cmd
+
+let find_at_home () =
+  match Sys.getenv_opt "HOME" with
+  | None -> None
+  | Some home -> find_idaq64 home
+
+let locate_linux () =
+  let pathes = match find_at_home () with
+    | None | Some [] -> find_idaq64 "/"
+    | xs -> xs in
+  match pathes with
+  | Some (path :: _) -> Some path
+  | _ -> None
+
+let locate_macos () =
+  match unix_cmd "mdfind -name idaq | sort -n -r" with
+  | None -> None
+  | Some pathes ->
+    let path =
+      List.find_opt (fun p ->
+          Filename.basename p = "idaq.app") pathes in
+    match path with
+    | None -> None
+    | Some path -> Some (Printf.sprintf "%s/Contents/MacOS/" path)
+
+let rec find fs =
+  match fs with
+  | [] -> None
+  | f :: fs ->
+    match f () with
+    | None -> find fs
+    | x -> x
+
+let locate () =
+  match os with
+  | MacOs -> find [which_ida; locate_macos]
+  | Linux -> find [which_ida; locate_linux]
+  | Other system ->
+    Printf.eprintf
+      "warning: we don't know how to find programs on %s!\n" system;
+    exit 1
+
+let write path =
+  let dir, file_depends =
+    if Sys.is_directory path then path, ""
+    else
+      Filename.dirname path,
+      Printf.sprintf "file-depends: [ [ %%S %%S ] ]\n"
+        path (Digest.to_hex (Digest.file path)) in
+  let oc = open_out "%{_:name}%.config" in
+  Printf.fprintf oc "opam-version: \"2.0\"\n \
+                     %s\
+                     variables {\n\
+                       path: %%S\n\
+                       headless: %b\n\
+                     }\n"
+    file_depends dir headless;
+  close_out oc
+
+let of_config () =
+  let path = "%{ida-path}%" in
+  if path = "" then None
+  else Some path
+
+let of_env () = Sys.getenv_opt "IDA_PATH"
+
+let () =
+  match find [ of_config; of_env; locate; ] with
+  | Some path -> write path
+  | None ->
+    Printf.eprintf "failed to locate IDA Pro\n";
+    exit 1
