@@ -43,6 +43,10 @@ let write path version =
 let (/) = Filename.concat
 
 let normalize ver =
+  let ver =
+    if String.length ver >= 3 then
+      String.sub ver 0 3
+    else ver in
   if ver > "3.8" then String.sub ver 0 1
   else ver
 
@@ -53,7 +57,8 @@ let brew_config ver =
     let ver = normalize ver in
     match unix_cmd' (sprintf "ls %s | grep %s" cellar ver) with
     | None -> None
-    | Some p -> Some (cellar / p / "bin" / "llvm-config")
+    | Some p ->
+      unix_cmd' (sprintf "find %s/%s -name \"llvm-config\"" cellar p)
 
 let macports_config ver = sprintf "llvm-config-mp-%s" ver
 
@@ -75,7 +80,7 @@ let configs ver =
   | _ -> configs
 
 let locate () =
-  let versions = ["3.4"; "3.8"; "4.0"; "5.0"; "6.0"; "7.0"] in
+  let versions = ["7.0"; "6.0"; "5.0"; "4.0"; "3.8"; "3.4"] in
   List.fold_left (fun cfg ver ->
       match cfg with
       | Some _ -> cfg
