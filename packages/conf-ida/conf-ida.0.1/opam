@@ -8,14 +8,14 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["ocaml" "unix.cma" "find-ida.ml" os]
+  ["ocaml" "unix.cma" "find-ida.ml"]
 ]
 depends: [
    "ocaml"
    "base-unix"
 ]
 substs: [ "find-ida.ml" ]
-flags: [ conf light-uninstall ]
+flags: [ conf ]
 
 synopsis: "Checks that IDA Pro is installed"
 description: """

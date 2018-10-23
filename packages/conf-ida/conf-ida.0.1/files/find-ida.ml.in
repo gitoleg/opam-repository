@@ -1,10 +1,11 @@
+open Printf
 
 type sys =
   | MacOs
   | Linux
   | Other of string
 
-let os = match Sys.argv.(1) with
+let os = match "%{os}%" with
   | "macos" -> MacOs
   | "linux" -> Linux
   | s -> Other s
@@ -32,7 +33,7 @@ let which_ida () =
   | _ -> None
 
 let find_idaq64 path =
-  let cmd = Printf.sprintf
+  let cmd = sprintf
       "find %s -executable -type f -name \"idaq64\" 2>/dev/null | sort -n -r" path in
   unix_cmd cmd
 
@@ -58,7 +59,7 @@ let locate_macos () =
           Filename.basename p = "idaq.app") pathes in
     match path with
     | None -> None
-    | Some path -> Some (Printf.sprintf "%s/Contents/MacOS/" path)
+    | Some path -> Some (sprintf "%s/Contents/MacOS/" path)
 
 let rec find fs =
   match fs with
@@ -73,7 +74,7 @@ let locate () =
   | MacOs -> find [which_ida; locate_macos]
   | Linux -> find [which_ida; locate_linux]
   | Other system ->
-    Printf.eprintf
+    eprintf
       "warning: we don't know how to find programs on %s!\n" system;
     exit 1
 
@@ -82,10 +83,10 @@ let write path =
     if Sys.is_directory path then path, ""
     else
       Filename.dirname path,
-      Printf.sprintf "file-depends: [ [ %%S %%S ] ]\n"
+      sprintf "file-depends: [ [ %%S %%S ] ]\n"
         path (Digest.to_hex (Digest.file path)) in
   let oc = open_out "%{_:name}%.config" in
-  Printf.fprintf oc "opam-version: \"2.0\"\n \
+  fprintf oc "opam-version: \"2.0\"\n \
                      %s\
                      variables {\n\
                        path: %%S\n\
@@ -105,5 +106,5 @@ let () =
   match find [ of_config; of_env; locate; ] with
   | Some path -> write path
   | None ->
-    Printf.eprintf "failed to locate IDA Pro\n";
+    eprintf "failed to locate IDA Pro\n";
     exit 1

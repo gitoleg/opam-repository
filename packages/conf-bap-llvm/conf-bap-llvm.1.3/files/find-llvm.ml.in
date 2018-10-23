@@ -1,0 +1,113 @@
+open Printf
+
+let unix_cmd cmd =
+  let rec input_all acc inp =
+    let line =
+      try  Some (input_line inp)
+      with End_of_file -> None in
+    match line with
+    | None -> acc
+    | Some line -> input_all (line :: acc) inp in
+  try
+    let inp = Unix.open_process_in cmd in
+    let res = input_all [] inp in
+    let _ = Unix.close_process_in inp in
+    res
+  with _ -> []
+
+let unix_cmd' cmd = match unix_cmd cmd with
+  | [] -> None
+  | hd :: _ -> Some hd
+
+let which cfg = unix_cmd' (sprintf "which %s" cfg)
+
+let of_config () =
+  let cfg = "%{llvm-config}%" in
+  if cfg = "" then None
+  else Some cfg
+
+let of_env () = Sys.getenv_opt "LLVM_CONFIG"
+
+let write path version =
+  let digest = Digest.to_hex (Digest.file path) in
+  let oc = open_out "%{_:name}%.config" in
+  fprintf oc "opam-version: \"2.0\"\n\
+              file-depends: [ [ %%S %%S ] ]\n\
+              variables {\n  \
+              config: %%S\n  \
+              package-version: \"%s\"\n\
+              }\n"
+    path digest path version;
+  close_out oc
+
+let (/) = Filename.concat
+
+let normalize ver =
+  if ver > "3.8" then String.sub ver 0 1
+  else ver
+
+let brew_config ver =
+  match unix_cmd' "brew --cellar" with
+  | None -> None
+  | Some cellar ->
+    let ver = normalize ver in
+    match unix_cmd' (sprintf "ls %s | grep %s" cellar ver) with
+    | None -> None
+    | Some p -> Some (cellar / p / "bin" / "llvm-config")
+
+let macports_config ver = sprintf "llvm-config-mp-%s" ver
+
+let configs ver =
+  let ver' = match String.index_opt ver '.' with
+    | None -> ver
+    | Some i -> String.sub ver 0 i ^ String.sub ver (i + 1) 1 in
+  let configs = [
+    sprintf "llvm-config-%s" ver;
+    sprintf "llvm-config-%s" ver';
+    "llvm-config";
+  ] in
+  match "%{os}%" with
+  | "macos" ->
+    let configs = match brew_config ver with
+      | None -> configs
+      | Some b -> b :: configs in
+    macports_config ver :: configs
+  | _ -> configs
+
+let locate () =
+  let versions = ["3.4"; "3.8"; "4.0"; "5.0"; "6.0"; "7.0"] in
+  List.fold_left (fun cfg ver ->
+      match cfg with
+      | Some _ -> cfg
+      | None ->
+        let configs = configs ver in
+        List.find_opt (fun cfg ->
+            match which (sprintf "%s" cfg) with
+            | None -> false
+            | Some cfg ->
+              match unix_cmd' (sprintf "%s --version" cfg) with
+              | None -> false
+              | Some ver' ->
+                let ver' = normalize ver' in
+                List.exists (fun v ->
+                    String.equal ver' (normalize v)) versions) configs)
+    None versions
+
+let rec find fs =
+  match fs with
+  | [] -> None
+  | f :: fs ->
+    match f () with
+    | None -> find fs
+    | x -> x
+
+let () =
+  let path = match find [of_config; of_env; locate] with
+    | Some cfg -> which cfg
+    | None -> None in
+  match path with
+  | None -> eprintf "LLVM not found"; exit 1
+  | Some path ->
+    match unix_cmd' (sprintf "%s --version" path) with
+    | None -> eprintf "'%s --version' failed\n" path; exit 1
+    | Some version -> write path version

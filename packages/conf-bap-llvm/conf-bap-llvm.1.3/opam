@@ -6,7 +6,7 @@ authors: "The LLVM Team"
 bug-reports: "https://llvm.org/bugs/"
 license: "BSD"
 build: [
-  ["bash" "-ex" "configure"]
+  ["ocaml" "unix.cma" "find-llvm.ml" os]
 ]
 depends: [
   "ocaml"
@@ -26,7 +26,9 @@ depexts: [
   ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
   ["llvm@6"]   {os = "macos" & os-distribution = "homebrew"}
 ]
-extra-files: ["configure" "md5=cd5d1c777a2f1ccad148a40ff3431043"]
+
+substs: [ "find-llvm.ml" ]
+flags: [ conf verbose ]
 
 synopsis: "Checks that supported version of LLVM is installed"
 description: """
