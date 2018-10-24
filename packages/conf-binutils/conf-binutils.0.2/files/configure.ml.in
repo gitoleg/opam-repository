@@ -1,0 +1,92 @@
+open Printf
+
+let unix_cmd cmd =
+  let rec input_all acc inp =
+    let line =
+      try  Some (input_line inp)
+      with End_of_file -> None in
+    match line with
+    | None -> acc
+    | Some line -> input_all (line :: acc) inp in
+  try
+    let inp = Unix.open_process_in cmd in
+    let res = input_all [] inp in
+    let _ = Unix.close_process_in inp in
+    res
+  with _ -> []
+
+let unix_cmd' cmd = match unix_cmd cmd with
+  | [] -> None
+  | hd :: _ -> Some hd
+
+let which x = unix_cmd' (sprintf "which %s" x)
+
+let write objdump cxxfilt targets =
+  let digest path = Digest.to_hex (Digest.file path) in
+  let depends = function
+    | None -> ""
+    | Some file ->
+      sprintf "[ %S %S ]" file (digest file) in
+  let get x = match x with
+    | None -> ""
+    | Some x -> x in
+  let file_depends =
+    let deps = String.concat " " [depends objdump; depends cxxfilt] in
+    if deps = "" then ""
+    else sprintf "file-depends: [ %s ]" deps in
+  let oc = open_out "%{_:name}%.config" in
+  let cxxfilt = get cxxfilt in
+  let objdump = get objdump in
+  fprintf oc "opam-version: \"2.0\"\n\
+              %s\n\
+              variables {\n  \
+              cxxfilt: %S\n  \
+              objdump: %S\n  \
+              targets: %S\n\
+              }\n"
+    file_depends cxxfilt objdump targets;
+  close_out oc
+
+let collect_objdumps () =
+  let find where =
+    unix_cmd
+      (sprintf "find %s -name \"*objdump\" -executable -type f" where) in
+  find "/bin" @ find "/usr"
+
+let collect_targets objdumps =
+  let has_prefix str pref =
+    let len = String.length pref in
+    len <= String.length str &&
+    String.(sub str 0 len = pref) in
+  List.fold_left (fun acc obj ->
+      let file = Filename.basename obj in
+      if file = "objdump" || file = "gobjdump" || has_prefix file "llvm"
+      then acc
+      else
+      if Filename.check_suffix file "-objdump" then
+        Filename.chop_suffix file "-objdump" :: acc
+      else acc) [] objdumps
+
+let string_of_targets targets =
+  List.fold_left (fun acc x ->
+      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
+
+let () =
+  match "%{os}%" with
+  | "linux" ->
+    let objdump = which "objdump" in
+    let cxxfilt = which "c++filt" in
+    let objdumps = collect_objdumps () in
+    let targets = collect_targets objdumps in
+    let targets = string_of_targets targets in
+    write objdump cxxfilt targets
+  | "macos" ->
+    let objdump= which "gobjdump" in
+    let cxxfilt = which "c++filt" in
+    let objdumps = unix_cmd "mdfind -name objdump" in
+    let targets = collect_targets objdumps in
+    let targets = string_of_targets targets in
+    write objdump cxxfilt targets
+  | s ->
+    eprintf "unsupported OS %s\n" s;
+    exit 1

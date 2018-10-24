@@ -10,6 +10,8 @@ let os = match "%{os}%" with
   | "linux" -> Linux
   | s -> Other s
 
+let (/) = Filename.concat
+
 let headless = os = Linux && Sys.getenv_opt "DISPLAY" = None
 
 let unix_cmd cmd =
@@ -24,18 +26,21 @@ let unix_cmd cmd =
     let inp = Unix.open_process_in cmd in
     let res = input_all [] inp in
     let _ = Unix.close_process_in inp in
-    Some res
-  with _ -> None
+    res
+  with _ -> []
 
-let which_ida () =
-  match unix_cmd "which idaq64" with
-  | Some (path :: _) -> Some path
-  | _ -> None
+let unix_cmd' cmd =
+  match unix_cmd cmd with
+  | [] -> None
+  | hd :: _ -> Some hd
+
+let which x = unix_cmd' (sprintf "which %s" x)
+let which_ida () = which "idaq64"
 
 let find_idaq64 path =
   let cmd = sprintf
       "find %s -executable -type f -name \"idaq64\" 2>/dev/null | sort -n -r" path in
-  unix_cmd cmd
+  unix_cmd' cmd
 
 let find_at_home () =
   match Sys.getenv_opt "HOME" with
@@ -43,17 +48,14 @@ let find_at_home () =
   | Some home -> find_idaq64 home
 
 let locate_linux () =
-  let pathes = match find_at_home () with
-    | None | Some [] -> find_idaq64 "/"
-    | xs -> xs in
-  match pathes with
-  | Some (path :: _) -> Some path
-  | _ -> None
+  match find_at_home () with
+  | None -> find_idaq64 "/"
+  | x -> x
 
 let locate_macos () =
   match unix_cmd "mdfind -name idaq | sort -n -r" with
-  | None -> None
-  | Some pathes ->
+  | [] -> None
+  | pathes ->
     let path =
       List.find_opt (fun p ->
           Filename.basename p = "idaq.app") pathes in
@@ -83,15 +85,15 @@ let write path =
     if Sys.is_directory path then path, ""
     else
       Filename.dirname path,
-      sprintf "file-depends: [ [ %%S %%S ] ]\n"
+      sprintf "file-depends: [ [ %S %S ] ]\n"
         path (Digest.to_hex (Digest.file path)) in
   let oc = open_out "%{_:name}%.config" in
-  fprintf oc "opam-version: \"2.0\"\n \
-                     %s\
-                     variables {\n\
-                       path: %%S\n\
-                       headless: %b\n\
-                     }\n"
+  fprintf oc "opam-version: \"2.0\"\n\
+              %s\
+              variables {\n  \
+              path: %S\n  \
+              headless: %b\n\
+              }\n"
     file_depends dir headless;
   close_out oc
 

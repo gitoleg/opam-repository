@@ -32,9 +32,9 @@ let write path version =
   let digest = Digest.to_hex (Digest.file path) in
   let oc = open_out "%{_:name}%.config" in
   fprintf oc "opam-version: \"2.0\"\n\
-              file-depends: [ [ %%S %%S ] ]\n\
+              file-depends: [ [ %S %S ] ]\n\
               variables {\n  \
-              config: %%S\n  \
+              config: %S\n  \
               package-version: \"%s\"\n\
               }\n"
     path digest path version;

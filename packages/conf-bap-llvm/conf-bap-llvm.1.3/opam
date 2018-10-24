@@ -6,10 +6,11 @@ authors: "The LLVM Team"
 bug-reports: "https://llvm.org/bugs/"
 license: "BSD"
 build: [
-  ["ocaml" "unix.cma" "find-llvm.ml" os]
+  ["ocaml" "unix.cma" "find-llvm.ml"]
 ]
 depends: [
   "ocaml"
+  "base-unix"
   "conf-which" {build}
 ]
 depexts: [
@@ -28,7 +29,7 @@ depexts: [
 ]
 
 substs: [ "find-llvm.ml" ]
-flags: [ conf verbose ]
+flags: [ conf ]
 
 synopsis: "Checks that supported version of LLVM is installed"
 description: """

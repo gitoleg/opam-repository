@@ -13,6 +13,7 @@ build: [
 depends: [
    "ocaml"
    "base-unix"
+   "conf-which" {build}
 ]
 substs: [ "find-ida.ml" ]
 flags: [ conf ]

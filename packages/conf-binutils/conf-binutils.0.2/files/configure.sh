@@ -33,6 +33,12 @@ collect_targets() {
    for path in $OBJDUMPS; do
         file=`basename "${path}"`
         pref=${file%-objdump}
+
+        echo "path $path"
+        echo "file $file"
+        echo "pref $pref"
+        echo ""
+
         if [ $pref -a -f $path -a -x $path -a "x${pref}" != "xllvm" -a "x${pref}" != "xobjdump" ]; then
             if [ `which ${file}`  ]; then
                 FOUND=1
