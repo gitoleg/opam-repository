@@ -8,7 +8,7 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["sh" "-x" "configure.sh" os]
+  ["ocaml" "find-binutils.ml"]
 ]
 
 depexts: [
@@ -25,5 +25,12 @@ depexts: [
   ] {os = "macos" & os-distribution = "macports"}
 ]
 synopsis: "Checks that binutils are installed"
-depends: ["ocaml"]
-extra-files: ["configure.sh" "md5=84e5c36f9781f19a6d326e00aaf70448"]
+
+depends: [
+  "ocaml"
+  "base-unix"
+  "conf-which" {build}
+]
+
+substs: [ "find-binutils.ml" ]
+flags: [ conf ]

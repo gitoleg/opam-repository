@@ -44,7 +44,11 @@ let unix_cmd' cmd = match unix_cmd cmd with
 
 let which x = unix_cmd' (sprintf "which %s" x)
 
-let write objdump cxxfilt targets =
+let string_of_targets targets =
+  List.fold_left (fun acc x ->
+      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
+
+let write objdump targets =
   let digest path = Digest.to_hex (Digest.file path) in
   let depends = function
     | None -> ""
@@ -54,21 +58,20 @@ let write objdump cxxfilt targets =
     | None -> ""
     | Some x -> x in
   let file_depends =
-    let deps = String.concat " " [depends objdump; depends cxxfilt] in
+    let deps = depends objdump in
     if deps = "" then ""
     else sprintf "file-depends: [ %s ]" deps in
+  let targets = string_of_targets targets in
   let oc = open_out "%{_:name}%.config" in
-  let cxxfilt = get cxxfilt in
   let objdump = get objdump in
   fprintf oc {|
 opam-version: "2.0"
 %s
 variables {
-  cxxfilt: %S
   objdump: %S
   targets: %S
 }
-|} file_depends cxxfilt objdump targets;
+|} file_depends objdump targets;
   close_out oc
 
 let collect_objdumps () =
@@ -91,27 +94,19 @@ let collect_targets objdumps =
         Filename.chop_suffix file "-objdump" :: acc
       else acc) [] objdumps
 
-let string_of_targets targets =
-  List.fold_left (fun acc x ->
-      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
-
 let () =
   match "%{os}%" with
   | "linux" ->
     let objdump = which "objdump" in
-    let cxxfilt = which "c++filt" in
     let objdumps = collect_objdumps () in
     let targets = collect_targets objdumps in
-    let targets = string_of_targets targets in
-    write objdump cxxfilt targets
+    write objdump targets
   | "macos" ->
     let objdump= which "gobjdump" in
-    let cxxfilt = which "c++filt" in
     let objdumps = unix_cmd "mdfind -name objdump" in
     let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
     let targets = collect_targets objdumps in
-    let targets = string_of_targets targets in
-    write objdump cxxfilt targets
+    write objdump targets
   | s ->
     eprintf "unsupported OS %s\n" s;
     exit 1
