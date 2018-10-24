@@ -50,7 +50,9 @@ let of_config () =
   if cfg = "" then None
   else Some cfg
 
-let of_env () = Sys.getenv_opt "LLVM_CONFIG"
+let of_env () =
+  try Some (Sys.getenv "LLVM_CONFIG")
+  with Not_found -> None
 
 let write path version =
   let digest = Digest.to_hex (Digest.file path) in
@@ -87,8 +89,12 @@ let brew_config ver =
 
 let macports_config ver = sprintf "llvm-config-mp-%s" ver
 
+let index_opt str c =
+  try Some (String.index str '.')
+  with Not_found -> None
+
 let configs ver =
-  let ver' = match String.index_opt ver '.' with
+  let ver' = match index_opt ver '.' with
     | None -> ver
     | Some i -> String.sub ver 0 i ^ String.sub ver (i + 1) 1 in
   let configs = [

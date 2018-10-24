@@ -14,7 +14,11 @@ let os = match "%{os}%" with
 
 let (/) = Filename.concat
 
-let headless = os = Linux && Sys.getenv_opt "DISPLAY" = None
+let getenv_opt var =
+  try Some (Sys.getenv var)
+  with Not_found -> None
+
+let headless = os = Linux && getenv_opt "DISPLAY" = None
 
 let read_all ch =
   (* We use 65536 because that is the size of OCaml's IO buffers. *)
@@ -67,7 +71,7 @@ let find_idaq64 path =
   unix_cmd' cmd
 
 let find_at_home () =
-  match Sys.getenv_opt "HOME" with
+  match getenv_opt "HOME" with
   | None -> None
   | Some home -> find_idaq64 home
 
@@ -126,7 +130,7 @@ let of_config () =
   if path = "" then None
   else Some path
 
-let of_env () = Sys.getenv_opt "IDA_PATH"
+let of_env () = getenv_opt "IDA_PATH"
 
 let () =
   match find [ of_config; of_env; locate; ] with
