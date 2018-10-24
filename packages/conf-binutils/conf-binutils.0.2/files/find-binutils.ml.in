@@ -72,10 +72,6 @@ variables {
 |} file_depends cxxfilt objdump targets;
   close_out oc
 
-let write a b c =
-  write a b c;
-  List.iter (printf "%s\n") (unix_cmd "cat %{_:name}%.config")
-
 let collect_objdumps () =
   let find where =
     unix_cmd
