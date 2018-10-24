@@ -1,16 +1,40 @@
+#load "unix.cma"
+
 open Printf
 
+let read_all ch =
+  (* We use 65536 because that is the size of OCaml's IO buffers. *)
+  let buf_size = 65536 in
+  let buf = Buffer.create buf_size in
+  let rec loop () =
+    try
+      let ch = input_char ch in
+      let () = Buffer.add_char buf ch in
+      loop ()
+    with End_of_file -> () in
+  loop ();
+  Buffer.contents buf
+
+let split_on_char sep s =
+  let r = ref [] in
+  let j = ref (String.length s) in
+  for i = String.length s - 1 downto 0 do
+    if String.unsafe_get s i = sep then begin
+      r := String.sub s (i + 1) (!j - i - 1) :: !r;
+      j := i
+    end
+  done;
+  String.sub s 0 !j :: !r
+
+let input_lines ch =
+  let data = read_all ch in
+  let data = split_on_char '\n' data in
+  List.filter (fun s -> s <> "") data
+
 let unix_cmd cmd =
-  let rec input_all acc inp =
-    let line =
-      try  Some (input_line inp)
-      with End_of_file -> None in
-    match line with
-    | None -> acc
-    | Some line -> input_all (line :: acc) inp in
   try
     let inp = Unix.open_process_in cmd in
-    let res = input_all [] inp in
+    let res = input_lines inp in
     let _ = Unix.close_process_in inp in
     res
   with _ -> []
@@ -37,15 +61,20 @@ let write objdump cxxfilt targets =
   let oc = open_out "%{_:name}%.config" in
   let cxxfilt = get cxxfilt in
   let objdump = get objdump in
-  fprintf oc "opam-version: \"2.0\"\n\
-              %s\n\
-              variables {\n  \
-              cxxfilt: %S\n  \
-              objdump: %S\n  \
-              targets: %S\n\
-              }\n"
-    file_depends cxxfilt objdump targets;
+  fprintf oc {|
+opam-version: "2.0"
+%s
+variables {
+  cxxfilt: %S
+  objdump: %S
+  targets: %S
+}
+|} file_depends cxxfilt objdump targets;
   close_out oc
+
+let write a b c =
+  write a b c;
+  List.iter (printf "%s\n") (unix_cmd "cat %{_:name}%.config")
 
 let collect_objdumps () =
   let find where =

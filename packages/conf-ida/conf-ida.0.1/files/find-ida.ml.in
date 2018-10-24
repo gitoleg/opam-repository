@@ -1,3 +1,5 @@
+#load "unix.cma"
+
 open Printf
 
 type sys =
@@ -14,17 +16,39 @@ let (/) = Filename.concat
 
 let headless = os = Linux && Sys.getenv_opt "DISPLAY" = None
 
+let read_all ch =
+  (* We use 65536 because that is the size of OCaml's IO buffers. *)
+  let buf_size = 65536 in
+  let buf = Buffer.create buf_size in
+  let rec loop () =
+    try
+      let ch = input_char ch in
+      let () = Buffer.add_char buf ch in
+      loop ()
+    with End_of_file -> () in
+  loop ();
+  Buffer.contents buf
+
+let split_on_char sep s =
+  let r = ref [] in
+  let j = ref (String.length s) in
+  for i = String.length s - 1 downto 0 do
+    if String.unsafe_get s i = sep then begin
+      r := String.sub s (i + 1) (!j - i - 1) :: !r;
+      j := i
+    end
+  done;
+  String.sub s 0 !j :: !r
+
+let input_lines ch =
+  let data = read_all ch in
+  let data = split_on_char '\n' data in
+  List.filter (fun s -> s <> "") data
+
 let unix_cmd cmd =
-  let rec input_all acc inp =
-    let line =
-      try  Some (input_line inp)
-      with End_of_file -> None in
-    match line with
-    | None -> acc
-    | Some line -> input_all (line :: acc) inp in
   try
     let inp = Unix.open_process_in cmd in
-    let res = input_all [] inp in
+    let res = input_lines inp in
     let _ = Unix.close_process_in inp in
     res
   with _ -> []
@@ -56,12 +80,11 @@ let locate_macos () =
   match unix_cmd "mdfind -name idaq | sort -n -r" with
   | [] -> None
   | pathes ->
-    let path =
-      List.find_opt (fun p ->
-          Filename.basename p = "idaq.app") pathes in
-    match path with
-    | None -> None
-    | Some path -> Some (sprintf "%s/Contents/MacOS/" path)
+    try
+      let path =
+        List.find (fun p -> Filename.basename p = "idaq.app") pathes in
+      Some (sprintf "%s/Contents/MacOS/" path)
+    with Not_found -> None
 
 let rec find fs =
   match fs with
@@ -88,13 +111,14 @@ let write path =
       sprintf "file-depends: [ [ %S %S ] ]\n"
         path (Digest.to_hex (Digest.file path)) in
   let oc = open_out "%{_:name}%.config" in
-  fprintf oc "opam-version: \"2.0\"\n\
-              %s\
-              variables {\n  \
-              path: %S\n  \
-              headless: %b\n\
-              }\n"
-    file_depends dir headless;
+  fprintf oc {|
+opam-version: "2.0"
+%s
+variables {
+  path: %S
+  headless: %b
+}
+|} file_depends dir headless;
   close_out oc
 
 let of_config () =

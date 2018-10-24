@@ -6,7 +6,7 @@ authors: "The LLVM Team"
 bug-reports: "https://llvm.org/bugs/"
 license: "BSD"
 build: [
-  ["ocaml" "unix.cma" "find-llvm.ml"]
+  ["ocaml" "find-llvm.ml"]
 ]
 depends: [
   "ocaml"

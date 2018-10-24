@@ -1,16 +1,40 @@
+#load "unix.cma"
+
 open Printf
 
+let read_all ch =
+  (* We use 65536 because that is the size of OCaml's IO buffers. *)
+  let buf_size = 65536 in
+  let buf = Buffer.create buf_size in
+  let rec loop () =
+    try
+      let ch = input_char ch in
+      let () = Buffer.add_char buf ch in
+      loop ()
+    with End_of_file -> () in
+  loop ();
+  Buffer.contents buf
+
+let split_on_char sep s =
+  let r = ref [] in
+  let j = ref (String.length s) in
+  for i = String.length s - 1 downto 0 do
+    if String.unsafe_get s i = sep then begin
+      r := String.sub s (i + 1) (!j - i - 1) :: !r;
+      j := i
+    end
+  done;
+  String.sub s 0 !j :: !r
+
+let input_lines ch =
+  let data = read_all ch in
+  let data = split_on_char '\n' data in
+  List.filter (fun s -> s <> "") data
+
 let unix_cmd cmd =
-  let rec input_all acc inp =
-    let line =
-      try  Some (input_line inp)
-      with End_of_file -> None in
-    match line with
-    | None -> acc
-    | Some line -> input_all (line :: acc) inp in
   try
     let inp = Unix.open_process_in cmd in
-    let res = input_all [] inp in
+    let res = input_lines inp in
     let _ = Unix.close_process_in inp in
     res
   with _ -> []
@@ -31,13 +55,14 @@ let of_env () = Sys.getenv_opt "LLVM_CONFIG"
 let write path version =
   let digest = Digest.to_hex (Digest.file path) in
   let oc = open_out "%{_:name}%.config" in
-  fprintf oc "opam-version: \"2.0\"\n\
-              file-depends: [ [ %S %S ] ]\n\
-              variables {\n  \
-              config: %S\n  \
-              package-version: \"%s\"\n\
-              }\n"
-    path digest path version;
+  fprintf oc {|
+opam-version: "2.0"
+file-depends: [ [ %S %S ] ]
+variables {
+  config: %S
+  package-version: "%s"
+}
+|} path digest path version;
   close_out oc
 
 let (/) = Filename.concat
@@ -79,6 +104,11 @@ let configs ver =
     macports_config ver :: configs
   | _ -> configs
 
+let find_opt ~f xs =
+  try
+    Some (List.find f xs)
+  with Not_found -> None
+
 let locate () =
   let versions = ["7.0"; "6.0"; "5.0"; "4.0"; "3.8"; "3.4"] in
   List.fold_left (fun cfg ver ->
@@ -86,7 +116,7 @@ let locate () =
       | Some _ -> cfg
       | None ->
         let configs = configs ver in
-        List.find_opt (fun cfg ->
+        find_opt (fun cfg ->
             match which (sprintf "%s" cfg) with
             | None -> false
             | Some cfg ->
