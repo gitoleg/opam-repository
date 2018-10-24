@@ -17,4 +17,4 @@ depexts: [
   ["llvm-3.8"] {os = "macos" & os-distribution = "macports"}
 ]
 conflicts: ["conf-llvm"]
-extra-files: ["configure" "md5=3b4512d4836da4bd730bdea584bcf63b"]
+extra-files: ["configure" "md5=47b8674130ba68afeeabebb719960c0f"]
