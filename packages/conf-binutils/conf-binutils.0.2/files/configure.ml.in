@@ -84,6 +84,7 @@ let () =
     let objdump= which "gobjdump" in
     let cxxfilt = which "c++filt" in
     let objdumps = unix_cmd "mdfind -name objdump" in
+    let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
     let targets = collect_targets objdumps in
     let targets = string_of_targets targets in
     write objdump cxxfilt targets
