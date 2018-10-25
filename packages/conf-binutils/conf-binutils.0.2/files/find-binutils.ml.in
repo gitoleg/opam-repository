@@ -6,43 +6,61 @@ let read_all ch =
   let buf_size = 16 in
   let buf = Buffer.create buf_size in
   let rec loop () =
-    try
-      let ch = input_char ch in
-      let () = Buffer.add_char buf ch in
-      loop ()
-    with End_of_file -> () in
-  loop ();
-  Buffer.contents buf
+    match input_char ch with
+    | ch -> Buffer.add_char buf ch; loop ()
+    | exception End_of_file -> String.trim (Buffer.contents buf) in
+  loop ()
 
 let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
   for i = String.length s - 1 downto 0 do
-    if String.unsafe_get s i = sep then begin
+    if String.get s i = sep then begin
       r := String.sub s (i + 1) (!j - i - 1) :: !r;
       j := i
     end
   done;
   String.sub s 0 !j :: !r
 
-let input_lines ch =
-  let data = read_all ch in
-  let data = split_on_char '\n' data in
-  List.filter (fun s -> s <> "") data
+let split str =
+  List.map String.trim (split_on_char '\n' str)
 
-let unix_cmd cmd =
-  try
-    let inp = Unix.open_process_in cmd in
-    let res = input_lines inp in
-    let _ = Unix.close_process_in inp in
-    res
-  with _ -> []
+exception Command_failed of Unix.process_status
 
-let unix_cmd' cmd = match unix_cmd cmd with
-  | [] -> None
-  | hd :: _ -> Some hd
+let process_status_to_string s =
+  let open Unix in
+  match s with
+  | WEXITED i -> sprintf "exit status %d" 1
+  | WSIGNALED i -> sprintf "proccess was killed by signal %d" i
+  | WSTOPPED  i -> sprintf "proccess was stopped by signal %d" i
 
-let which x = unix_cmd' (sprintf "which %s" x)
+let exn_to_string = function
+  | Command_failed s -> sprintf "%s" (process_status_to_string s)
+  | e -> Printexc.to_string e
+
+let cmd fmt =
+  let run c =
+    try
+      let inp = Unix.open_process_in c in
+      let res = read_all inp in
+      match Unix.close_process_in inp with
+      | Unix.WEXITED 0 -> Some res
+      | s -> raise (Command_failed s)
+    with e ->
+      eprintf "command %s failed: %s\n" c (exn_to_string e);
+      None in
+  ksprintf run fmt
+
+let split_results fmt =
+  let run c =
+    match cmd "%s" c with
+    | None -> []
+    | Some s -> split s in
+  ksprintf run fmt
+
+let string_of_targets targets =
+  List.fold_left (fun acc x ->
+      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
 
 let write objdump cxxfilt targets =
   let digest path = Digest.to_hex (Digest.file path) in
@@ -57,6 +75,7 @@ let write objdump cxxfilt targets =
     let deps = String.concat " " [depends objdump; depends cxxfilt] in
     if deps = "" then ""
     else sprintf "file-depends: [ %s ]" deps in
+  let targets = string_of_targets targets in
   let oc = open_out "%{_:name}%.config" in
   let cxxfilt = get cxxfilt in
   let objdump = get objdump in
@@ -73,8 +92,8 @@ variables {
 
 let collect_objdumps () =
   let find where =
-    unix_cmd
-      (sprintf "find %s -name \"*objdump\" -executable -type f" where) in
+    split_results
+      "find %s -name \"*objdump\" -executable -type f" where in
   find "/bin" @ find "/usr"
 
 let collect_targets objdumps =
@@ -91,9 +110,7 @@ let collect_targets objdumps =
         Filename.chop_suffix file "-objdump" :: acc
       else acc) [] objdumps
 
-let string_of_targets targets =
-  List.fold_left (fun acc x ->
-      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
+let which = cmd "which %s"
 
 let () =
   match "%{os}%" with
@@ -102,15 +119,13 @@ let () =
     let cxxfilt = which "c++filt" in
     let objdumps = collect_objdumps () in
     let targets = collect_targets objdumps in
-    let targets = string_of_targets targets in
     write objdump cxxfilt targets
   | "macos" ->
     let objdump= which "gobjdump" in
     let cxxfilt = which "c++filt" in
-    let objdumps = unix_cmd "mdfind -name objdump" in
+    let objdumps = split_results "mdfind -name objdump" in
     let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
     let targets = collect_targets objdumps in
-    let targets = string_of_targets targets in
     write objdump cxxfilt targets
   | s ->
     eprintf "unsupported OS %s\n" s;

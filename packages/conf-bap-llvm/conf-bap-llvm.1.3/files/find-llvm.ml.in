@@ -6,52 +6,38 @@ let read_all ch =
   let buf_size = 16 in
   let buf = Buffer.create buf_size in
   let rec loop () =
-    let ch =
-      try Some (input_char ch)
-      with End_of_file -> None in
-    match ch with
-    | None -> ()
-    | Some ch -> Buffer.add_char buf ch; loop () in
-  loop ();
-  Buffer.contents buf
+    match input_char ch with
+    | ch -> Buffer.add_char buf ch; loop ()
+    | exception End_of_file -> String.trim (Buffer.contents buf) in
+  loop ()
 
-let split_on_char sep s =
-  let r = ref [] in
-  let j = ref (String.length s) in
-  for i = String.length s - 1 downto 0 do
-    if String.get s i = sep then begin
-      r := String.sub s (i + 1) (!j - i - 1) :: !r;
-      j := i
-    end
-  done;
-  String.sub s 0 !j :: !r
+exception Command_failed of Unix.process_status
 
-let split str =
-  let xs = split_on_char '\n' str in
-  List.fold_left (fun acc s -> acc @ split_on_char '\r' s) [] xs
+let process_status_to_string s =
+  let open Unix in
+  match s with
+  | WEXITED i -> sprintf "exit status %d" 1
+  | WSIGNALED i -> sprintf "proccess was killed by signal %d" i
+  | WSTOPPED i -> sprintf "proccess was stopped by signal %d" i
+
+let exn_to_string = function
+  | Command_failed s -> sprintf "%s" (process_status_to_string s)
+  | e -> Printexc.to_string e
 
 let cmd fmt =
   let run c =
     try
       let inp = Unix.open_process_in c in
       let res = read_all inp in
-      let _ = Unix.close_process_in inp in
-      if res = "" then None
-      else Some res
+      match Unix.close_process_in inp with
+      | Unix.WEXITED 0 -> Some res
+      | s -> raise (Command_failed s)
     with e ->
-      eprintf "command %s failed %s\n" c (Printexc.to_string e);
+      eprintf "command %s failed: %s\n" c (exn_to_string e);
       None in
   ksprintf run fmt
 
-let cmd' fmt =
-  let run c = match cmd "%s" c with
-    | None -> None
-    | Some s -> match split s with
-      | [] -> None
-      | hd :: _ -> Some hd in
-  ksprintf run fmt
-
-let of_config () =
+let of_opam_config () =
   let cfg = "%{llvm-config}%" in
   if cfg = "" then None
   else Some cfg
@@ -87,10 +73,10 @@ let brew_config ver =
   match cmd "brew --cellar" with
   | None -> None
   | Some cellar ->
-    match cmd' "ls %s | grep %s" cellar (normalize ver) with
+    match cmd "ls %s | grep %s" cellar (normalize ver) with
     | None -> None
     | Some p ->
-      cmd' "find %s/%s -name \"llvm-config\"" cellar p
+      cmd "find %s/%s -name \"llvm-config\"" cellar p
 
 let macports_config ver = sprintf "llvm-config-mp-%s" ver
 
@@ -130,10 +116,10 @@ let locate () =
       | None ->
         let configs = configs ver in
         find_opt (fun cfg ->
-            match cmd' "which %s" cfg with
+            match cmd "which %s" cfg with
             | None -> false
             | Some cfg ->
-              match cmd' "%s --version" cfg with
+              match cmd "%s --version" cfg with
               | None -> false
               | Some ver' ->
                 List.exists (versions_equal ver') versions) configs)
@@ -148,12 +134,12 @@ let rec find_map fs =
     | x -> x
 
 let () =
-  let path = match find_map [of_config; of_env; locate] with
-    | Some cfg -> cmd' "which %s" cfg
+  let path = match find_map [of_opam_config; of_env; locate] with
+    | Some cfg -> cmd "which %s" cfg
     | None -> None in
   match path with
   | None -> eprintf "LLVM not found"; exit 1
   | Some path ->
-    match cmd' "%s --version" path with
+    match cmd "%s --version" path with
     | None -> eprintf "'%s --version' failed\n" path; exit 1
     | Some version -> write path version
