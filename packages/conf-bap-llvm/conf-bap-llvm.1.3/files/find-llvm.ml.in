@@ -6,11 +6,12 @@ let read_all ch =
   let buf_size = 16 in
   let buf = Buffer.create buf_size in
   let rec loop () =
-    try
-      let ch = input_char ch in
-      let () = Buffer.add_char buf ch in
-      loop ()
-    with End_of_file -> () in
+    let ch =
+      try Some (input_char ch)
+      with End_of_file -> None in
+    match ch with
+    | None -> ()
+    | Some ch -> Buffer.add_char buf ch; loop () in
   loop ();
   Buffer.contents buf
 
@@ -18,31 +19,37 @@ let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
   for i = String.length s - 1 downto 0 do
-    if String.unsafe_get s i = sep then begin
+    if String.get s i = sep then begin
       r := String.sub s (i + 1) (!j - i - 1) :: !r;
       j := i
     end
   done;
   String.sub s 0 !j :: !r
 
-let input_lines ch =
-  let data = read_all ch in
-  let data = split_on_char '\n' data in
-  List.filter (fun s -> s <> "") data
+let split str =
+  let xs = split_on_char '\n' str in
+  List.fold_left (fun acc s -> acc @ split_on_char '\r' s) [] xs
 
-let unix_cmd cmd =
-  try
-    let inp = Unix.open_process_in cmd in
-    let res = input_lines inp in
-    let _ = Unix.close_process_in inp in
-    res
-  with _ -> []
+let cmd fmt =
+  let run c =
+    try
+      let inp = Unix.open_process_in c in
+      let res = read_all inp in
+      let _ = Unix.close_process_in inp in
+      if res = "" then None
+      else Some res
+    with e ->
+      eprintf "command %s failed %s\n" c (Printexc.to_string e);
+      None in
+  ksprintf run fmt
 
-let unix_cmd' cmd = match unix_cmd cmd with
-  | [] -> None
-  | hd :: _ -> Some hd
-
-let which cfg = unix_cmd' (sprintf "which %s" cfg)
+let cmd' fmt =
+  let run c = match cmd "%s" c with
+    | None -> None
+    | Some s -> match split s with
+      | [] -> None
+      | hd :: _ -> Some hd in
+  ksprintf run fmt
 
 let of_config () =
   let cfg = "%{llvm-config}%" in
@@ -77,14 +84,13 @@ let normalize ver =
   else ver
 
 let brew_config ver =
-  match unix_cmd' "brew --cellar" with
+  match cmd "brew --cellar" with
   | None -> None
   | Some cellar ->
-    let ver = normalize ver in
-    match unix_cmd' (sprintf "ls %s | grep %s" cellar ver) with
+    match cmd' "ls %s | grep %s" cellar (normalize ver) with
     | None -> None
     | Some p ->
-      unix_cmd' (sprintf "find %s/%s -name \"llvm-config\"" cellar p)
+      cmd' "find %s/%s -name \"llvm-config\"" cellar p
 
 let macports_config ver = sprintf "llvm-config-mp-%s" ver
 
@@ -110,9 +116,11 @@ let configs ver =
   | _ -> configs
 
 let find_opt ~f xs =
-  try
-    Some (List.find f xs)
+  try Some (List.find f xs)
   with Not_found -> None
+
+let versions_equal v v' =
+  String.equal (normalize v) (normalize v')
 
 let locate () =
   let versions = ["7.0"; "6.0"; "5.0"; "4.0"; "3.8"; "3.4"] in
@@ -122,32 +130,30 @@ let locate () =
       | None ->
         let configs = configs ver in
         find_opt (fun cfg ->
-            match which (sprintf "%s" cfg) with
+            match cmd' "which %s" cfg with
             | None -> false
             | Some cfg ->
-              match unix_cmd' (sprintf "%s --version" cfg) with
+              match cmd' "%s --version" cfg with
               | None -> false
               | Some ver' ->
-                let ver' = normalize ver' in
-                List.exists (fun v ->
-                    String.equal ver' (normalize v)) versions) configs)
+                List.exists (versions_equal ver') versions) configs)
     None versions
 
-let rec find fs =
+let rec find_map fs =
   match fs with
   | [] -> None
   | f :: fs ->
     match f () with
-    | None -> find fs
+    | None -> find_map fs
     | x -> x
 
 let () =
-  let path = match find [of_config; of_env; locate] with
-    | Some cfg -> which cfg
+  let path = match find_map [of_config; of_env; locate] with
+    | Some cfg -> cmd' "which %s" cfg
     | None -> None in
   match path with
   | None -> eprintf "LLVM not found"; exit 1
   | Some path ->
-    match unix_cmd' (sprintf "%s --version" path) with
+    match cmd' "%s --version" path with
     | None -> eprintf "'%s --version' failed\n" path; exit 1
     | Some version -> write path version
