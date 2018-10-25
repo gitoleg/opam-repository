@@ -23,7 +23,8 @@ let split_on_char sep s =
   String.sub s 0 !j :: !r
 
 let split str =
-  List.map String.trim (split_on_char '\n' str)
+  List.map String.trim (split_on_char '\n' str) |>
+  List.filter (fun s -> s <> "")
 
 exception Command_failed of Unix.process_status
 
@@ -31,8 +32,8 @@ let process_status_to_string s =
   let open Unix in
   match s with
   | WEXITED i -> sprintf "exit status %d" 1
+  | WSTOPPED i -> sprintf "proccess was stopped by signal %d" i
   | WSIGNALED i -> sprintf "proccess was killed by signal %d" i
-  | WSTOPPED  i -> sprintf "proccess was stopped by signal %d" i
 
 let exn_to_string = function
   | Command_failed s -> sprintf "%s" (process_status_to_string s)

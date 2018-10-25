@@ -17,8 +17,8 @@ let process_status_to_string s =
   let open Unix in
   match s with
   | WEXITED i -> sprintf "exit status %d" 1
-  | WSIGNALED i -> sprintf "proccess was killed by signal %d" i
   | WSTOPPED i -> sprintf "proccess was stopped by signal %d" i
+  | WSIGNALED i -> sprintf "proccess was killed by signal %d" i
 
 let exn_to_string = function
   | Command_failed s -> sprintf "%s" (process_status_to_string s)
