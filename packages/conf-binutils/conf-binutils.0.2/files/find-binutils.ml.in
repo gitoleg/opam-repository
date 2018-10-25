@@ -3,8 +3,7 @@
 open Printf
 
 let read_all ch =
-  let buf_size = 16 in
-  let buf = Buffer.create buf_size in
+  let buf = Buffer.create 16 in
   let rec loop () =
     match input_char ch with
     | ch -> Buffer.add_char buf ch; loop ()
@@ -114,20 +113,24 @@ let collect_targets objdumps =
 let which = cmd "which %s"
 
 let () =
-  match "%{os}%" with
-  | "linux" ->
-    let objdump = which "objdump" in
-    let cxxfilt = which "c++filt" in
-    let objdumps = collect_objdumps () in
-    let targets = collect_targets objdumps in
-    write objdump cxxfilt targets
-  | "macos" ->
-    let objdump= which "gobjdump" in
-    let cxxfilt = which "c++filt" in
-    let objdumps = split_results "mdfind -name objdump" in
-    let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
-    let targets = collect_targets objdumps in
-    write objdump cxxfilt targets
-  | s ->
-    eprintf "unsupported OS %s\n" s;
+  try
+    match "%{os}%" with
+    | "linux" ->
+      let objdump = which "objdump" in
+      let cxxfilt = which "c++filt" in
+      let objdumps = collect_objdumps () in
+      let targets = collect_targets objdumps in
+      write objdump cxxfilt targets
+    | "macos" ->
+      let objdump= which "gobjdump" in
+      let cxxfilt = which "c++filt" in
+      let objdumps = split_results "mdfind -name objdump" in
+      let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
+      let targets = collect_targets objdumps in
+      write objdump cxxfilt targets
+    | s ->
+      eprintf "unsupported OS %s\n" s;
+      exit 1
+  with e ->
+    eprintf "build failed: %s\n" (Printexc.to_string e);
     exit 1

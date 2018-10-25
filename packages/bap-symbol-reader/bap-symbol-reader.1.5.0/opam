@@ -27,7 +27,7 @@ remove: [
 
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
-  "oasis" {build & = "0.4.7"}
+  "oasis" {build & >= "0.4.7"}
   "bap-std" {= "1.5.0"}
   "cmdliner"
 ]

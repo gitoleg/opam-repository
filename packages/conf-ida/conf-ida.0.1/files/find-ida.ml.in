@@ -21,8 +21,7 @@ let getenv_opt var =
 let headless = os = Linux && getenv_opt "DISPLAY" = None
 
 let read_all ch =
-  let buf_size = 16 in
-  let buf = Buffer.create buf_size in
+  let buf = Buffer.create 16 in
   let rec loop () =
     match input_char ch with
     | ch -> Buffer.add_char buf ch; loop ()
@@ -146,8 +145,12 @@ let of_config () =
 let of_env () = getenv_opt "IDA_PATH"
 
 let () =
-  match find [ of_config; of_env; locate; ] with
-  | Some path -> write path
-  | None ->
-    eprintf "failed to locate IDA Pro\n";
+  try
+    match find [ of_config; of_env; locate; ] with
+    | Some path -> write path
+    | None ->
+      eprintf "failed to locate IDA Pro\n";
+      exit 1
+  with e ->
+    eprintf "build failed: %s\n" (Printexc.to_string e);
     exit 1

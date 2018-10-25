@@ -3,8 +3,7 @@
 open Printf
 
 let read_all ch =
-  let buf_size = 16 in
-  let buf = Buffer.create buf_size in
+  let buf = Buffer.create 16 in
   let rec loop () =
     match input_char ch with
     | ch -> Buffer.add_char buf ch; loop ()
@@ -134,12 +133,16 @@ let rec find_map fs =
     | x -> x
 
 let () =
-  let path = match find_map [of_opam_config; of_env; locate] with
-    | Some cfg -> cmd "which %s" cfg
-    | None -> None in
-  match path with
-  | None -> eprintf "LLVM not found"; exit 1
-  | Some path ->
-    match cmd "%s --version" path with
-    | None -> eprintf "'%s --version' failed\n" path; exit 1
-    | Some version -> write path version
+  try
+    let path = match find_map [of_opam_config; of_env; locate] with
+      | Some cfg -> cmd "which %s" cfg
+      | None -> None in
+    match path with
+    | None -> eprintf "LLVM not found"; exit 1
+    | Some path ->
+      match cmd "%s --version" path with
+      | None -> eprintf "'%s --version' failed\n" path; exit 1
+      | Some version -> write path version
+  with e ->
+    eprintf "build failed: %s\n" (Printexc.to_string e);
+    exit 1
