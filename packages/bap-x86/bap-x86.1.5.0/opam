@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-x86"
-version: "1.5.0"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
@@ -23,7 +23,7 @@ remove: [
 
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
-  "bap-std" {= "1.5.0"}
+  "bap-std" {= "master"}
   "bap-abi"
   "bap-c"
   "bap-llvm"
@@ -31,7 +31,5 @@ depends: [
 ]
 synopsis: "BAP x86 lifter"
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
-  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
-  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }

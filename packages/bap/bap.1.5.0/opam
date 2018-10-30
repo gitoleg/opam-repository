@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap"
-version: "1.5.0"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
@@ -10,51 +10,51 @@ license: "MIT"
 
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
-  "bap-abi" {= "1.5.0"}
-  "bap-api" {= "1.5.0"}
-  "bap-arm" {= "1.5.0"}
-  "bap-beagle" {= "1.5.0"}
-  "bap-bil" {= "1.5.0"}
-  "bap-byteweight" {= "1.5.0"}
-  "bap-c" {= "1.5.0"}
-  "bap-cache" {= "1.5.0"}
-  "bap-cxxfilt" {= "1.5.0"}
-  "bap-callsites" {= "1.5.0"}
-  "bap-constant-tracker" {= "1.5.0"}
-  "bap-demangle" {= "1.5.0"}
-  "bap-dump-symbols" {= "1.5.0"}
-  "bap-frontend" {= "1.5.0"}
-  "bap-frontc" {= "1.5.0"}
-  "bap-llvm" {= "1.5.0"}
-  "bap-mc" {= "1.5.0"}
-  "bap-microx" {= "1.5.0"}
-  "bap-mips" {= "1.5.0"}
-  "bap-objdump" {= "1.5.0"}
-  "bap-optimization" {= "1.5.0"}
-  "bap-powerpc" {= "1.5.0"}
-  "bap-primus" {= "1.5.0"}
-  "bap-primus-dictionary" {= "1.5.0"}
-  "bap-primus-lisp" {= "1.5.0"}
-  "bap-primus-region" {= "1.5.0"}
-  "bap-primus-support" {= "1.5.0"}
-  "bap-primus-test" {= "1.5.0"}
-  "bap-primus-x86" {= "1.5.0"}
-  "bap-print" {= "1.5.0"}
-  "bap-relocatable" {= "1.5.0"}
-  "bap-report" {= "1.5.0"}
-  "bap-run" {= "1.5.0"}
-  "bap-ssa" {= "1.5.0"}
-  "bap-std" {= "1.5.0"}
-  "bap-strings" {= "1.5.0"}
-  "bap-symbol-reader" {= "1.5.0"}
-  "bap-taint" {= "1.5.0"}
-  "bap-taint-propagator" {= "1.5.0"}
-  "bap-term-mapper" {= "1.5.0"}
-  "bap-trace" {= "1.5.0"}
-  "bap-traces" {= "1.5.0"}
-  "bap-trivial-condition-form" {= "1.5.0"}
-  "bap-warn-unused" {= "1.5.0"}
-  "bap-x86" {= "1.5.0"}
+  "bap-abi" {= "master"}
+  "bap-api" {= "master"}
+  "bap-arm" {= "master"}
+  "bap-beagle" {= "master"}
+  "bap-bil" {= "master"}
+  "bap-byteweight" {= "master"}
+  "bap-c" {= "master"}
+  "bap-cache" {= "master"}
+  "bap-cxxfilt" {= "master"}
+  "bap-callsites" {= "master"}
+  "bap-constant-tracker" {= "master"}
+  "bap-demangle" {= "master"}
+  "bap-dump-symbols" {= "master"}
+  "bap-frontend" {= "master"}
+  "bap-frontc" {= "master"}
+  "bap-llvm" {= "master"}
+  "bap-mc" {= "master"}
+  "bap-microx" {= "master"}
+  "bap-mips" {= "master"}
+  "bap-objdump" {= "master"}
+  "bap-optimization" {= "master"}
+  "bap-powerpc" {= "master"}
+  "bap-primus" {= "master"}
+  "bap-primus-dictionary" {= "master"}
+  "bap-primus-lisp" {= "master"}
+  "bap-primus-region" {= "master"}
+  "bap-primus-support" {= "master"}
+  "bap-primus-test" {= "master"}
+  "bap-primus-x86" {= "master"}
+  "bap-print" {= "master"}
+  "bap-relocatable" {= "master"}
+  "bap-report" {= "master"}
+  "bap-run" {= "master"}
+  "bap-ssa" {= "master"}
+  "bap-std" {= "master"}
+  "bap-strings" {= "master"}
+  "bap-symbol-reader" {= "master"}
+  "bap-taint" {= "master"}
+  "bap-taint-propagator" {= "master"}
+  "bap-term-mapper" {= "master"}
+  "bap-trace" {= "master"}
+  "bap-traces" {= "master"}
+  "bap-trivial-condition-form" {= "master"}
+  "bap-warn-unused" {= "master"}
+  "bap-x86" {= "master"}
   "bap-emacs-goodies"
 ]
 synopsis: "Binary Analysis Platform"
@@ -74,7 +74,5 @@ a Lisp-like DSL for writing program analysis tools.
 
 This is a meta package that installs essential parts of BAP."""
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
-  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
-  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }

@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-primus-test"
-version: "1.5.0"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
@@ -21,8 +21,8 @@ remove: [
 
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
-  "bap-std" {= "1.5.0"}
-  "bap-primus" {= "1.5.0"}
+  "bap-std" {= "master"}
+  "bap-primus" {= "master"}
 ]
 synopsis: "BAP Primus Testing and Program Verification module"
 description: """
@@ -40,7 +40,5 @@ Check Returned Value - verifies that a program is addressing all
 possible outcomes of certain API calls, e.g., checks return values,
 error codes, etc."""
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
-  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
-  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }

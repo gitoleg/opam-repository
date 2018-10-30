@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-trivial-condition-form"
-version: "1.5.0"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
@@ -19,7 +19,7 @@ remove: [["ocamlfind" "remove" "bap-plugin-trivial_condition_form"]
 
 depends: [
   "ocaml" {>= "4.03" & < "4.06"}
-  "bap-std" {= "1.5.0"}
+  "bap-std" {= "master"}
 ]
 synopsis: "Eliminates complex conditionals in branches"
 description: """
@@ -28,7 +28,5 @@ or a constant. We call such representation a Trivial Condition Form
 (TCF). During the translation all complex condition expressions are
 hoisted into the assignemnt section of a block."""
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap/archive/v1.5.0.tar.gz"
-  checksum: "md5=9eed04fda6610dd4a8aa83948abfffc3"
-  mirrors: "https://mirrors.aegis.cylab.cmu.edu/bap/1.5.0/v1.5.0.tar.gz"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }
