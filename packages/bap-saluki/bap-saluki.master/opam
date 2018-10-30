@@ -26,5 +26,5 @@ reducing the need for manual auditing of binaries. Prop- erties are
 formally verified over a program model which abstracts the concrete
 program."""
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap-plugins#master"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap-plugins#master"
 }
