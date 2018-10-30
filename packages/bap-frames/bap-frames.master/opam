@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-frames"
-version: "2.1.1"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
@@ -39,13 +39,11 @@ depends: [
   "oasis" {build & >= "0.4.7"}
   "core_kernel" {>= "v0.9.0" & < "v0.10.0"}
   "ppx_jane" {>= "v0.9.0" & < "v0.10"}
-  "bap-std" {>= "1.0.0" & < "2.0.0"}
-  "bap-traces" {>= "1.0.0" & < "2.0.0"}
+  "bap-std" {= "master"}
+  "bap-traces" {= "master"}
   "piqi" {>= "0.7.4"}
 ]
 synopsis: "A data format for storing execution traces"
 url {
-  src:
-    "https://github.com/BinaryAnalysisPlatform/bap-frames/archive/v2.1.1.tar.gz"
-  checksum: "md5=1c9d805875230c84b8ba131be1cb8486"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap-frames#master"
 }

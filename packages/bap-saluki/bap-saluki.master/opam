@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-saluki"
-version: "bap-1.5"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap-plugins/"
@@ -13,7 +13,7 @@ install : [make "-C" "saluki" "install"]
 remove  : ["bapbundle" "remove" "saluki.plugin"]
 depends: [
   "ocaml"
-  "bap-std"  {= "1.5.0"}
+  "bap-std"  {= "master"}
   "bap-callsites"
   "bap-taint-propagator"
 ]
@@ -26,6 +26,5 @@ reducing the need for manual auditing of binaries. Prop- erties are
 formally verified over a program model which abstracts the concrete
 program."""
 url {
-  src: "https://github.com/BinaryAnalysisPlatform/bap-plugins/archive/bap-1.5.tar.gz"
-  checksum: "md5=703c7f04f24dc3a543088d166e610abd"
+  src: "https://github.com/BinaryAnalysisPlatform/bap-plugins#master"
 }

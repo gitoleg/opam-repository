@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "bap-veri"
-version: "0.2"
+version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
 homepage: "https://github.com/BinaryAnalysisPlatform/bap-veri/"
@@ -22,8 +22,8 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.02.3"}
-  "bap-std"
+  "ocaml" {>= "4.03" & < "4.06"}
+  "bap-std" {= "master"}
   "bap-traces"
   "cmdliner"
   "oasis" {build}
@@ -32,10 +32,12 @@ depends: [
   "textutils"
   "uri"
 ]
-synopsis: "BAP verification tool"
+synopsis: "BAP Instruction Semantics Verification Tool"
+description: """
+Verifies that our understaning of instruction semantics is correct, or
+at least the same as in QEMU by checking if our execution bisimulates
+the QEMU."""
 flags: light-uninstall
 url {
-  src:
-    "https://github.com/BinaryAnalysisPlatform/bap-veri/archive/v0.2.tar.gz"
-  checksum: "md5=1bdbbeee1d2c143609690720f3860521"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap-veri#master"
 }
