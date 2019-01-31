@@ -9,7 +9,7 @@ dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-abi" {= "master"}
   "bap-api" {= "master"}
   "bap-arm" {= "master"}

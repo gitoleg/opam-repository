@@ -15,7 +15,7 @@ install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-plugin-frontc_parser"]
         ["bapbundle" "remove" "frontc_parser.plugin"]]
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-std" {= "master"}
   "bap-c"
   "FrontC"

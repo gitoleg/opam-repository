@@ -25,7 +25,7 @@ remove: [[ "ocamlfind" "remove" "bap-plugin-map_terms"]
 ]
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "oasis" {build & >= "0.4.7"}
   "bap-std" {= "master"}
   "cmdliner"
