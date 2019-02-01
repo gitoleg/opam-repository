@@ -21,7 +21,7 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.05.0" & < "4.06"}
+  "ocaml" {>= "4.05.0"}
   "bap-std" {= "master"}
   "bap-dwarf"
   "bitstring" {>= "3.0.0"}

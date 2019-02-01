@@ -18,7 +18,7 @@ remove: [["ocamlfind" "remove" "bap-plugin-powerpc"]
          ["bapbundle" "remove" "powerpc.plugin"]]
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-abi"
   "bap-c"
   "bap-primus" {= "master"}

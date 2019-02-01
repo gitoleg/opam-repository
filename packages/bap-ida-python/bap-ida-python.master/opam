@@ -20,7 +20,7 @@ remove: [
     ["rm" "-rf" "%{prefix}%/share/%{name}%/"]
 ]
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap" {= "master"}
   "conf-ida"
 ]

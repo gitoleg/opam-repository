@@ -35,10 +35,10 @@ remove: [
         ]
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "oasis" {build & >= "0.4.7"}
-  "core_kernel" {>= "v0.9.0" & < "v0.10.0"}
-  "ppx_jane" {>= "v0.9.0" & < "v0.10"}
+  "core_kernel" {>= "v0.11" & < "v0.12"}
+  "ppx_jane" {>= "v0.11" & < "v0.12"}
   "bap-std" {= "master"}
   "bap-traces" {= "master"}
   "piqi" {>= "0.7.4"}

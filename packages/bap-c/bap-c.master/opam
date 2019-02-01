@@ -14,7 +14,7 @@ build: [
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-c"]]
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-std" {= "master"}
   "bap-api"
 ]

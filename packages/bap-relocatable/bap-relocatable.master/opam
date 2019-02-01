@@ -20,7 +20,7 @@ remove: [
         ]
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-std" {= "master"}
   "ogre"
 ]

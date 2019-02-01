@@ -22,11 +22,11 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "oasis" {build & >= "0.4.0"}
   "base-unix"
   "base-threads"
-  "core_kernel" {>= "v0.9.0" & < "v0.11"}
+  "core_kernel" {>= "v0.11" & < "v0.12"}
   "lwt" {>= "3.0.0" & < "4.0.0"}
 ]
 synopsis: "Lwt library wrapper in the Janestreet core style"
@@ -35,7 +35,5 @@ Provides an interface to Lwt library that follows the Janestreet
 coding standards."""
 flags: light-uninstall
 url {
-  src:
-    "https://github.com/BinaryAnalysisPlatform/core-lwt/archive/v0.2.0.tar.gz"
-  checksum: "md5=6d92f09611566e14080f2f517136ef34"
+  src: "git+https://github.com/BinaryAnalysisPlatform/core-lwt#master"
 }

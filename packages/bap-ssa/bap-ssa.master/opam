@@ -15,7 +15,7 @@ install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-plugin-ssa"]
          ["bapbundle" "remove" "ssa.plugin"]]
 depends: [
-  "ocaml" {>= "4.03" & < "4.06"}
+  "ocaml" {>= "4.04.1"}
   "bap-std" {= "master"}
 ]
 synopsis: "A BAP plugin, that translates a program into the SSA form"
