@@ -35,7 +35,7 @@ depends: [
   "bap-future"
   "camlzip" {>= "1.07"}
   "core_kernel" {>= "v0.11" & < "v0.12"}
-  "bin_prot" {>= "v0.9.1" & < "v0.10"}
+  "bin_prot" {>= "v0.11" & < "v0.12"}
   "fileutils"
   "graphlib"
   "oasis" {build & >= "0.4.7"}
@@ -43,7 +43,7 @@ depends: [
   "ppx_jane" {>= "v0.11" & < "v0.12"}
   "regular"
   "uri"
-  "utop" {build & = "1.19.3"}
+  "utop" {build & >= "2.0.0"}
   "uuidm"
   "zarith"
   "cmdliner" {>= "0.9.8"}
