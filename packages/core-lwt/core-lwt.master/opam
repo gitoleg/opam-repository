@@ -27,7 +27,7 @@ depends: [
   "base-unix"
   "base-threads"
   "core_kernel" {>= "v0.11" & < "v0.12"}
-  "lwt" {>= "3.0.0" & < "4.0.0"}
+  "lwt" {>= "4.0.0" & < "5.0.0"}
 ]
 synopsis: "Lwt library wrapper in the Janestreet core style"
 description: """
