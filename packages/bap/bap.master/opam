@@ -23,6 +23,7 @@ depends: [
   "bap-constant-tracker" {= "master"}
   "bap-demangle" {= "master"}
   "bap-dump-symbols" {= "master"}
+  "bap-elf" {= "master"}
   "bap-frontend" {= "master"}
   "bap-frontc" {= "master"}
   "bap-llvm" {= "master"}
