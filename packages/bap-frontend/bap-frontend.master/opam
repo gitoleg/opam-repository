@@ -24,11 +24,11 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.04.1"}
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
   "oasis" {build & >= "0.4.7"}
   "bap-std" {= "master"}
   "cmdliner"
-  "parsexp"
+  "parsexp" {>= "v0.11" & < "v0.12"}
 ]
 synopsis: "BAP frontend"
 description: "The command-line interface to the Binary Analysis Platform."

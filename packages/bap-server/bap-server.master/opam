@@ -22,7 +22,7 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.04.1"}
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
   "core-lwt"
   "regular"
   "bap"
@@ -35,7 +35,7 @@ depends: [
   "lwt_log"
   "oasis" {build & >= "0.4.7"}
   "re"
-  "uri" {>= "1.9.6"}
+  "uri" {>= "2.0.0"}
 ]
 conflicts: [
     "tls" {< "0.7.1"}
