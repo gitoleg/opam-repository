@@ -21,7 +21,7 @@ remove: [
         ["bapbundle" "remove" "cxxfilt.plugin"]
 ]
 depends: [
-  "ocaml" {>= "4.04.1"}
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
   "bap-std" {= "master"}
   "bap-demangle"
   "conf-binutils" {>= "0.2"}

@@ -30,7 +30,7 @@ remove: [
 ]
 
 depends: [
-  "ocaml" {>= "4.04.1"}
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
   "base-unix"
   "bap-future"
   "camlzip" {>= "1.07"}
