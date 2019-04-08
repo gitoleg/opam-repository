@@ -20,7 +20,7 @@ depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
   "core_kernel" {>= "v0.11" & < "v0.12"}
   "oasis" {build}
-  "parsexp"
+  "parsexp" {>= "v0.11" & < "v0.12"}
 ]
 synopsis: "BAP Rule Engine Library"
 description: """
