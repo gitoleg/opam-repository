@@ -39,6 +39,7 @@ depends: [
 depexts: [
   ["clang"] {os-distribution = "ubuntu"}
   ["clang"] {os-distribution = "debian"}
+  ["clang"] {os-distribution = "alpine"}
 ]
 synopsis: "BAP LLVM backend"
 description:
