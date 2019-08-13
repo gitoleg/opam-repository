@@ -1,0 +1,28 @@
+opam-version: "2.0"
+name: "bap-bitvec"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%" "--enable-bitvec" "--enable-bitvec-order" "--enable-bitvec-binprot" "--enable-bitvec-sexp"]
+  [make]
+]
+install: [[make "install"]]
+remove: [["ocamlfind" "remove" "bitvec"]
+         ["ocamlfind" "remove" "bitvec_order"]
+         ["ocamlfind" "remove" "bitvec_sexp"]
+         ["ocamlfind" "remove" "bitvec_binprot"] ]
+depends: [
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
+  "zarith"
+  "bin_prot"
+  "sexplib0"
+]
+synopsis: "BAP knowledge library"
+url {
+  src: "git+https://github.com/ivg/bap#bap-2.0"
+}

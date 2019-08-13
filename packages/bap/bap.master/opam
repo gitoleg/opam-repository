@@ -21,11 +21,14 @@ depends: [
   "bap-cxxfilt" {= "master"}
   "bap-callsites" {= "master"}
   "bap-constant-tracker" {= "master"}
+  "bap-core-theory" {= "master"}
   "bap-demangle" {= "master"}
   "bap-dump-symbols" {= "master"}
+  "bap-elementary" {= "master"}
   "bap-elf" {= "master"}
   "bap-frontend" {= "master"}
   "bap-frontc" {= "master"}
+  "bap-knowledge" {= "master"}
   "bap-llvm" {= "master"}
   "bap-mc" {= "master"}
   "bap-microx" {= "master"}
@@ -75,5 +78,5 @@ a Lisp-like DSL for writing program analysis tools.
 
 This is a meta package that installs essential parts of BAP."""
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#bap-2.0"
 }

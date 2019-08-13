@@ -1,0 +1,22 @@
+opam-version: "2.0"
+name: "bap-language"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%" "--enable-language"]
+  [make]
+]
+install: [[make "install"]]
+remove: [["ocamlfind" "remove" "language"]]
+depends: [
+  "ocaml" {>= "4.04.1" & < "4.08.0"}
+]
+synopsis: "BAP language library"
+url {
+  src: "git+https://github.com/ivg/bap#bap-2.0"
+}
