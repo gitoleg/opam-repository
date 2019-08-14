@@ -21,14 +21,11 @@ depends: [
   "bap-cxxfilt" {= "master"}
   "bap-callsites" {= "master"}
   "bap-constant-tracker" {= "master"}
-  "bap-core-theory" {= "master"}
   "bap-demangle" {= "master"}
   "bap-dump-symbols" {= "master"}
-  "bap-elementary" {= "master"}
   "bap-elf" {= "master"}
   "bap-frontend" {= "master"}
   "bap-frontc" {= "master"}
-  "bap-knowledge" {= "master"}
   "bap-llvm" {= "master"}
   "bap-mc" {= "master"}
   "bap-microx" {= "master"}
