@@ -17,6 +17,9 @@ depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
   "bap-knowledge" {= "master"}
   "bap-bitvec" {= "master"}
+  "bap-bitvec-binprot" {= "master"}
+  "bap-bitvec-order" {= "master"}
+  "bap-bitvec-sexp" {= "master"}
 ]
 synopsis: "BAP core theory library"
 url {
