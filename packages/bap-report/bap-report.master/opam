@@ -23,5 +23,5 @@ depends: [
 ]
 synopsis: "A BAP plugin that reports program status"
 url {
-  src: "git+https://github.com/ivg/bap#bap-2.0"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }

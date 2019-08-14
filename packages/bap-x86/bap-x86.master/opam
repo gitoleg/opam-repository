@@ -31,5 +31,5 @@ depends: [
 ]
 synopsis: "BAP x86 lifter"
 url {
-  src: "git+https://github.com/ivg/bap#bap-2.0"
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }
