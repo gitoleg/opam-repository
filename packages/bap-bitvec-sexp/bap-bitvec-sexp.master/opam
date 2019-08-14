@@ -16,6 +16,7 @@ remove: [["ocamlfind" "remove" "bap-bitvec-sexp"]]
 
 depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
+  "oasis" {build & >= "0.4.7"}
   "bap-bitvec"
   "sexplib0"
 ]
