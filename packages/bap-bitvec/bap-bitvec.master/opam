@@ -19,8 +19,10 @@ remove: [["ocamlfind" "remove" "bitvec"]
 depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
   "zarith"
+  "base"
   "bin_prot"
   "sexplib0"
+  "ppx_jane"
 ]
 synopsis: "BAP knowledge library"
 url {
