@@ -19,7 +19,7 @@ depends: [
   "bap-strings"
   "bap-knowledge"
   "bap-core-theory"
-  "graphlib"
+  "graphlib" {= "master" }
 ]
 synopsis: "BAP lisp library"
 url {
