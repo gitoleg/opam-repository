@@ -16,12 +16,14 @@ remove: [["ocamlfind" "remove" "bap-recipe"]
          ]
 depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
+  "oasis" {build & >= "0.4.7"}
   "base"
   "stdio"
   "parsexp"
   "fileutils"
   "camlzip"
   "uuidm"
+  "stdlib-shims"
 ]
 synopsis: "stores command line parameters and resources in a single file"
 url {
