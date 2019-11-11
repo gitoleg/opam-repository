@@ -22,11 +22,8 @@ install: [
 
 remove: [
   ["ocamlfind" "remove" "bap"]
-  ["ocamlfind" "remove" "bap-build"]
   ["rm" "-f" "%{bin}%/baptop"]
   ["rm" "-f" "%{bin}%/ppx-bap"]
-  ["rm" "-f" "%{bin}%/bapbuild"]
-  ["rm" "-f" "%{bin}%/bapbundle"]
 ]
 
 depends: [
