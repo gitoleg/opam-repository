@@ -26,6 +26,7 @@ depends: [
   "bap-demangle" {= "master"}
   "bap-disassemble" {= "master"}
   "bap-dump-symbols" {= "master"}
+  "bap-elementary" {= "master"}
   "bap-elf" {= "master"}
   "bap-frontend" {= "master"}
   "bap-frontc" {= "master"}
