@@ -9,8 +9,6 @@ dev-repo: "git://github.com/BinaryAnalysisPlatform/bap-veri/"
 license: "MIT"
 
 build: [
-  ["oasis" "setup"]
-  ["./configure" "--prefix=%{prefix}%"]
   [make]
 ]
 

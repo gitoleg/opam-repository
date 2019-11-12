@@ -18,6 +18,7 @@ depends: [
   "base"
   "stdio"
   "cmdliner"
+  "bap-build"   {= "master"}
   "bap-future"  {= "master"}
   "bap-plugins" {= "master"}
   "bap-recipe"  {= "master"}
