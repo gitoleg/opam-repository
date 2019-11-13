@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "bap-bitvec-order"
+name: "bitvec-sexp"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
@@ -8,23 +8,19 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["./configure" "--prefix=%{prefix}%" "--enable-bitvec-order"]
+  ["./configure" "--prefix=%{prefix}%" "--enable-bitvec-sexp"]
   [make]
 ]
 install: [[make "install"]]
-remove: [["ocamlfind" "remove" "bap-bitvec-order"]]
+remove: [["ocamlfind" "remove" "bitvec-sexp"]]
+
 depends: [
   "ocaml" {>= "4.04.1" & < "4.08.0"}
   "oasis" {build & >= "0.4.7"}
-  "base"
-  "bap-bitvec"
-  "bap-bitvec-sexp"
+  "bitvec"
+  "sexplib0"
 ]
-synopsis: "BAP bitvec-order library"
-description:
-"""
-Provides comparators for use with Janestreet Libraries
-"""
+synopsis: "Sexp serializers for Bitvec"
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }
