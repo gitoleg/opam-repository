@@ -45,6 +45,7 @@ depends: [
   "bap-primus-powerpc" {= "master"}
   "bap-primus-region" {= "master"}
   "bap-primus-support" {= "master"}
+  "bap-primus-systems" {= "master"}
   "bap-primus-test" {= "master"}
   "bap-primus-x86" {= "master"}
   "bap-print" {= "master"}
