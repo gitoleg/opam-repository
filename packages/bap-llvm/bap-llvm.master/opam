@@ -39,7 +39,7 @@ depends: [
 depexts: [
   ["clang"] {os-distribution = "ubuntu"}
   ["clang"] {os-distribution = "debian"}
-  ["clang"; "libxml2-dev";] {os-distribution = "alpine"}
+  ["clang" "libxml2-dev";] {os-distribution = "alpine"}
 ]
 synopsis: "BAP LLVM backend"
 description:
