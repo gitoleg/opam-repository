@@ -1,0 +1,40 @@
+
+opam-version: "2.0"
+name: "bap-stub-resolver"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%" "--enable-stub-resolver"]
+  [make]
+]
+
+install: [[make "install"]]
+
+remove: [
+        ["ocamlfind" "remove" "bap-plugin-stub_resolver"]
+        ["bapbundle" "remove" "stub_resolver.plugin"]
+        ]
+
+depends: [
+  "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "bap-std" {= "master"}
+  "bap-abi" {= "master"}
+  "bap-knowledge" {= "master"}
+  "bap-core-theory" {= "master"}
+  "bap-main" {= "master"}
+  "bitvec-order" {= "master"}
+  "core-kernel" {>= "v0.12" & < "v0.13"}
+]
+synopsis: "Substitutes calls to stubs with calls to real functions"
+description: """
+  Provides an abi pass that transforms a program by substituting calls
+  to stubs with calls to real subroutines when they are present in
+  the binary."""
+url {
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+}
