@@ -58,6 +58,7 @@ depends: [
   "bap-ssa" {= "master"}
   "bap-std" {= "master"}
   "bap-strings" {= "master"}
+  "bap-stub-resolver" {= "master"}
   "bap-symbol-reader" {= "master"}
   "bap-taint" {= "master"}
   "bap-taint-propagator" {= "master"}
