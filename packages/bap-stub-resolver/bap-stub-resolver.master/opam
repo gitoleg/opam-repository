@@ -29,6 +29,7 @@ depends: [
   "bap-main" {= "master"}
   "bitvec-order" {= "master"}
   "core_kernel" {>= "v0.12" & < "v0.13"}
+  "ounit"
 ]
 synopsis: "Substitutes calls to stubs with calls to real functions"
 description: """
