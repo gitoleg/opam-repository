@@ -1,0 +1,37 @@
+opam-version: "2.0"
+name: "bap-primus-symbolic-executor"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%" "--enable-primus-symbolic-executor"]
+  [make]
+]
+
+install: [[make "install"]]
+
+remove: [["ocamlfind" "remove" "bap-plugin-primus_symbolic_executor"]
+         ["bapbundle" "remove" "primus_symbolic_executor.plugin"]]
+
+depends: [
+  "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "bap-main" {= "master"}
+  "bap-std"  {= "master"}
+  "bap-primus"
+  "bap-primus-support"
+  "bitvec"
+  "core_kernel"  {>= "v0.12" & < "v0.13"}
+  "monads"
+  "ppx_jane"  {>= "v0.12" & < "v0.13"}
+  "regular"
+  "zarith"
+  "z3"
+]
+synopsis: "Primus Symbolic Executor"
+url {
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+}

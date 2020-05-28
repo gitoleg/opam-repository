@@ -16,21 +16,22 @@ depends: [
 depexts: [
 
   # debian
-  ["llvm-4.0-dev"] {os-distribution = "debian"}
+  ["llvm-7-dev"] {os-distribution = "debian"}
 
   # ubuntu
   ["llvm-3.8-dev"] {os-distribution = "ubuntu" & os-version = "14.04"} #trusty
-  ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "16.04"} #xenial
-  ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "18.04"} #bionic
-  ["llvm-6.0-dev"] {os-distribution = "ubuntu" & os-version = "18.10"}
+  ["llvm-8-dev"]   {os-distribution = "ubuntu" & os-version = "16.04"} #xenial
+  ["llvm-9-dev"]   {os-distribution = "ubuntu" & os-version = "18.04"} #bionic
+  ["llvm-10-dev"]  {os-distribution = "ubuntu" & os-version = "20.04"} #focal
 
   # fedora
   ["llvm-devel" "llvm-static"] {os-distribution = "fedora"}
 
   # macos
   ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
-  ["llvm@6"]   {os = "macos" & os-distribution = "homebrew"}
+  ["llvm@9"]   {os = "macos" & os-distribution = "homebrew"}
 
+  #alpine
   ["llvm-dev" "llvm-static"] {os-distribution = "alpine"}
 ]
 

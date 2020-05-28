@@ -30,6 +30,7 @@ depends: [
   "bap-elf" {= "master"}
   "bap-frontend" {= "master"}
   "bap-frontc" {= "master"}
+  "bap-glibc-runtime" {= "master"}
   "bap-llvm" {= "master"}
   "bap-main" {= "master"}
   "bap-mc" {= "master"}
@@ -43,8 +44,10 @@ depends: [
   "bap-primus-dictionary" {= "master"}
   "bap-primus-lisp" {= "master"}
   "bap-primus-powerpc" {= "master"}
+  "bap-primus-random" {= "master"}
   "bap-primus-region" {= "master"}
   "bap-primus-support" {= "master"}
+  "bap-primus-symbolic-executor" {= "master"}
   "bap-primus-systems" {= "master"}
   "bap-primus-test" {= "master"}
   "bap-primus-x86" {= "master"}

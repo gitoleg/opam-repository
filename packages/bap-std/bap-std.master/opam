@@ -52,7 +52,7 @@ depends: [
   "cmdliner" {>= "0.9.8"}
   "ogre"
   "monads"
-  "result" {= "1.4"}
+  "result"
 ]
 depexts: [
   ["libgmp-dev" "libzip-dev" "clang"] {os-distribution = "ubuntu"}
