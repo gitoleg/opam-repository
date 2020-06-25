@@ -25,7 +25,7 @@ depends: [
   "bap-knowledge"
   "bitvec"
   "core_kernel" {>= "v0.12" & < "v0.13"}
-  "radare2"
+  "radare2" {= "0.0.5"}
   "re"
   "yojson"
   "zarith"
