@@ -1,0 +1,36 @@
+opam-version: "2.0"
+name: "bap-radare2"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%"
+                 "--enable-radare2"
+                 ]
+  [make]
+]
+install: [[make "install"]]
+remove: [["ocamlfind" "remove" "bap-plugin-radare2"]
+	 ["bapbundle" "remove" "radare2.plugin"]
+]
+depends: [
+  "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "bap-std" {= "master"}
+  "bap-core-theory"
+  "bap-future"
+  "bap-knowledge"
+  "bitvec"
+  "core_kernel" {>= "v0.12" & < "v0.13"}
+  "radare2"
+  "re"
+  "yojson"
+  "zarith"
+]
+synopsis: "Extract symbols from binary using radare2"
+url {
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+}
