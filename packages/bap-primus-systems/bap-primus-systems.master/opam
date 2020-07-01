@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "bap-primus-dictionary"
+name: "bap-primus-systems"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
