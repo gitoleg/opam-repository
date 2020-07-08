@@ -134,50 +134,47 @@ let of_env var =
   try Some (Sys.getenv var)
   with Not_found -> None
 
-let find_in_cellar name () =
+let find_in_cellar name =
   match cmd "brew --cellar" with
   | None -> None
   | Some cellar ->
     take_first "find %s/binutils -name %s" cellar name
 
-let objdump_of_opam_config () =
-  let cfg = "%{objdump-path}%" in
-  if cfg = "" then None
-  else Some cfg
+let of_opam_config = function
+  | "" -> None
+  | x  -> Some x
 
-let cppfilt_of_opam_config () =
-  let cfg = "%{cppfilt-path}%" in
-  if cfg = "" then None
-  else Some cfg
-
-let (>>) x f = match x with
-  | None -> f ()
-  | x -> x
-
-let find_cppfilt () =
-  of_env "CPPFILT_PATH" >>
-  cppfilt_of_opam_config >> fun () ->
-  which "c++filt"
+let rec find_map xs =
+  match xs with
+  | [] -> None
+  | x :: xs -> match x with
+    | None -> find_map xs
+    | x -> x
 
 let find_objdump () =
-  of_env "OBJDUMP_PATH" >>
-  objdump_of_opam_config
+  find_map [of_opam_config "%{objdump-path}%";
+            of_env "OBJDUMP_PATH";]
+
+let find_cppfilt () =
+  find_map [of_opam_config "%{cppfilt-path}%";
+            of_env "CPPFILT_PATH";]
 
 let () =
   try
     match "%{os}%" with
     | "linux" ->
-      let objdump = find_objdump () >> fun () -> which "objdump" in
-      let cxxfilt = find_cppfilt () in
+      let objdump = find_map [find_objdump (); which "objdump"] in
+      let cxxfilt = find_map [find_cppfilt (); which "c++filt"] in
       let objdumps = collect_objdumps () in
       let targets = collect_targets objdumps in
       write objdump cxxfilt targets
     | "macos" ->
-      let objdump =
-        find_objdump () >> fun () ->
-        which "gobjdump" >>
-        find_in_cellar "gobjdump" in
-      let cxxfilt = find_cppfilt () >> find_in_cellar "cppfilt"  in
+      let objdump = find_map [find_objdump ();
+                              which "gobjdump";
+                              find_in_cellar "gobjdump"; ] in
+      let cxxfilt = find_map [find_cppfilt ();
+                              which "c++filt";
+                              find_in_cellar "cppfilt"; ] in
       let objdumps = split_results "mdfind -name objdump" in
       let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
       let targets = collect_targets objdumps in
