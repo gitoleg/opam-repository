@@ -1,6 +1,14 @@
-(* #load "unix.cma" *)
-
 open Printf
+
+
+type t = {
+  objdump  : string option;
+  cxxfilt  : string option;
+  objdumps : string list;
+  cxxfilts : string list;
+}
+
+let (/) = Filename.concat
 
 let read_all ch =
   let buf = Buffer.create 16 in
@@ -70,10 +78,9 @@ let failed_to_find cmd =
   eprintf "%s not found\n" cmd;
   exit 1
 
-
-let write objdump objdumps cxxfilt cxxfilts =
+let write {objdump; objdumps; cxxfilt; cxxfilts;} =
   if is_none objdump then failed_to_find "objdump";
-  if is_none cxxfilt then failed_to_find "cxxfilt";
+  if is_none cxxfilt then failed_to_find "c++filt";
   let digest path = Digest.to_hex (Digest.file path) in
   let depends = function
     | None -> ""
@@ -101,28 +108,13 @@ variables {
     (get objdump) (string_of_list objdumps);
   close_out oc
 
-let collect_objdumps () =
-  let find where =
-    split_results
-      "find %s -name \"*objdump\" -executable -type f" where in
-  find "/bin" @ find "/usr"
-
-let collect_targets objdumps =
-
-  List.fold_left (fun acc obj ->
-      let file = Filename.basename obj in
-      if file = "objdump" || file = "gobjdump" || has_prefix file "llvm"
-      then acc
-      else
-      if Filename.check_suffix file "-objdump" then
-        Filename.chop_suffix file "-objdump" :: acc
-      else acc) [] objdumps
-
 let which name () = cmd "which %s" name
 
 let of_env var () =
   try Some (Sys.getenv var)
   with Not_found -> None
+
+let cellar () = cmd "brew --cellar"
 
 let find_in_cellar name () =
   match cmd "brew --cellar" with
@@ -161,17 +153,47 @@ let all_pathes () =
   | None -> []
   | Some r -> split r ~on:':'
 
-let find_objdumps path =
-  Sys.readdir path |>
-  Array.fold_left (fun acc file ->
-      if Filename.check_suffix file "objdump" then
-        file :: acc
-      else acc)
+let filter_objdumps objs =
+  let has_prefix str pref =
+    let len = String.length pref in
+    len <= String.length str &&
+    String.(sub str 0 len = pref) in
+  List.fold_left (fun acc obj ->
+      let file = Filename.basename obj in
+      if file = "objdump" || file = "gobjdump" || has_prefix file "llvm"
+      then acc
+      else
+      if Filename.check_suffix file "-objdump" then
+        Filename.chop_suffix file "-objdump" :: acc
+      else acc) [] objs
 
-let objdumps_of_path () =
-  all_pathes () |>
-  List.fold_left (fun acc p -> find_objdumps p :: acc) [] |>
-  List.concat
+let has_prefix str pref =
+  let len = String.length pref in
+  len <= String.length str &&
+  String.(sub str 0 len = pref)
+
+let collect t pathes =
+  let is_known fullpath = function
+    | None -> false
+    | Some x -> x = fullpath in
+  let is_objdump path file =
+    Filename.check_suffix file "objdump" &&
+    not (is_known (path/file) t.objdump) &&
+    not (has_prefix file "llvm") in
+  let is_cxxfilt path file =
+    not (is_known (path/file) t.cxxfilt) &&
+    Filename.check_suffix file "c++filt" in
+  let find t path =
+    if Sys.file_exists path && Sys.is_directory path then
+      Sys.readdir path |>
+      Array.fold_left (fun t file ->
+          if is_objdump path file then
+            {t with objdumps = path / file :: t.objdumps}
+          else if is_cxxfilt path file then
+            {t with cxxfilts = path / file :: t.cxxfilts}
+          else t) t
+    else t in
+  List.fold_left find t pathes
 
 let () =
   try
@@ -183,9 +205,10 @@ let () =
       let cxxfilt = first_success [
           find_cxxfilt;
           which "c++filt"] in
-      let objdumps = collect_objdumps () in
-      let targets = collect_targets objdumps in
-      write objdump cxxfilt targets
+      let t = collect
+          {objdump; cxxfilt; objdumps=[]; cxxfilts=[]}
+          (all_pathes ()) in
+      write t
     | "macos" ->
       let objdump = first_success [
           find_objdump;
@@ -195,11 +218,13 @@ let () =
           find_cxxfilt;
           which "c++filt";
           find_in_cellar "c++filt"; ] in
-
-      let objdumps = split_results "mdfind -name objdump" in
-      let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
-      let targets = collect_targets objdumps in
-      write objdump cxxfilt targets
+      let pathes = match cellar () with
+        | None -> all_pathes ()
+        | Some cellar -> cellar :: all_pathes () in
+      let t = collect
+          {objdump; cxxfilt; objdumps=[]; cxxfilts=[]}
+          pathes in
+      write t
     | s ->
       eprintf "unsupported OS %s\n" s;
       exit 1
