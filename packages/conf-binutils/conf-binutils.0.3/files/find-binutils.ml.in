@@ -1,4 +1,4 @@
-#load "unix.cma"
+(* #load "unix.cma" *)
 
 open Printf
 
@@ -21,8 +21,8 @@ let split_on_char sep s =
   done;
   String.sub s 0 !j :: !r
 
-let split str =
-  List.map String.trim (split_on_char '\n' str) |>
+let split ~on str =
+  List.map String.trim (split_on_char on str) |>
   List.filter (fun s -> s <> "")
 
 exception Command_failed of Unix.process_status
@@ -47,9 +47,7 @@ let cmd fmt =
       | Unix.WEXITED 0 -> Some res
       | s -> raise (Command_failed s)
     with e ->
-      printf "got an exception!\n";
       eprintf "command %s failed: %s\n" c (exn_to_string e);
-      printf "none will be returned\n";
       None in
   ksprintf run fmt
 
@@ -57,12 +55,12 @@ let split_results fmt =
   let run c =
     match cmd "%s" c with
     | None -> []
-    | Some s -> split s in
+    | Some s -> split ~on:'\n' s in
   ksprintf run fmt
 
-let string_of_targets targets =
+let string_of_list xs =
   List.fold_left (fun acc x ->
-      sprintf "%s\"%s\"; " acc x) "[" targets ^ "]"
+      sprintf "%s\"%s\"; " acc x) "[" xs ^ "]"
 
 let is_none = function
   | None -> true
@@ -72,7 +70,8 @@ let failed_to_find cmd =
   eprintf "%s not found\n" cmd;
   exit 1
 
-let write objdump cxxfilt targets =
+
+let write objdump objdumps cxxfilt cxxfilts =
   if is_none objdump then failed_to_find "objdump";
   if is_none cxxfilt then failed_to_find "cxxfilt";
   let digest path = Digest.to_hex (Digest.file path) in
@@ -87,19 +86,19 @@ let write objdump cxxfilt targets =
     let deps = String.concat " " [depends objdump; depends cxxfilt] in
     if deps = "" then ""
     else sprintf "file-depends: [ %s ]" deps in
-  let targets = string_of_targets targets in
   let oc = open_out "%{_:name}%.config" in
-  let cxxfilt = get cxxfilt in
-  let objdump = get objdump in
   fprintf oc {|
 opam-version: "2.0"
 %s
 variables {
   cxxfilt: %S
+  cxxfilts: %S
   objdump: %S
-  targets: %S
+  objdumps: %S
 }
-|} file_depends cxxfilt objdump targets;
+|} file_depends
+    (get cxxfilt) (string_of_list cxxfilts)
+    (get objdump) (string_of_list objdumps);
   close_out oc
 
 let collect_objdumps () =
@@ -109,10 +108,7 @@ let collect_objdumps () =
   find "/bin" @ find "/usr"
 
 let collect_targets objdumps =
-  let has_prefix str pref =
-    let len = String.length pref in
-    len <= String.length str &&
-    String.(sub str 0 len = pref) in
+
   List.fold_left (fun acc obj ->
       let file = Filename.basename obj in
       if file = "objdump" || file = "gobjdump" || has_prefix file "llvm"
@@ -122,65 +118,84 @@ let collect_targets objdumps =
         Filename.chop_suffix file "-objdump" :: acc
       else acc) [] objdumps
 
-let which = cmd "which %s"
+let which name () = cmd "which %s" name
 
-let of_env var =
+let of_env var () =
   try Some (Sys.getenv var)
   with Not_found -> None
 
-let find_in_cellar name =
+let find_in_cellar name () =
   match cmd "brew --cellar" with
   | None -> None
   | Some cellar ->
     match cmd "find %s/binutils -name %s" cellar name with
     | None -> None
-    | Some s -> match split s with
+    | Some s -> match split ~on:'\n' s with
       | [] -> None
       | x :: _ -> Some x
 
-let of_opam_config = function
+let of_opam_config var () = match var with
   | "" -> None
   | x  -> Some x
 
-let is_some = function
-  | Some _ -> true
-  | None -> false
-
-let find_some xs =
-  try
-    List.find is_some xs
-  with Not_found -> None
+let rec first_success = function
+  | [] -> None
+  | f :: fs ->  match f () with
+    | None -> first_success fs
+    | r -> r
 
 let find_objdump () =
-  find_some [of_opam_config "%{objdump-path}%";
-             of_env "OBJDUMP_PATH";]
+  first_success [
+    of_opam_config "%{objdump-path}%";
+    of_env "OBJDUMP_PATH";
+  ]
 
-let find_cppfilt () =
-  find_some [of_opam_config "%{cxxfilt-path}%";
-             of_env "CXXFILT_PATH";]
+let find_cxxfilt () =
+  first_success [
+    of_opam_config "%{cxxfilt-path}%";
+    of_env "CXXFILT_PATH";
+  ]
+
+let all_pathes () =
+  match of_env "PATH" () with
+  | None -> []
+  | Some r -> split r ~on:':'
+
+let find_objdumps path =
+  Sys.readdir path |>
+  Array.fold_left (fun acc file ->
+      if Filename.check_suffix file "objdump" then
+        file :: acc
+      else acc)
+
+let objdumps_of_path () =
+  all_pathes () |>
+  List.fold_left (fun acc p -> find_objdumps p :: acc) [] |>
+  List.concat
 
 let () =
   try
     match "%{os}%" with
     | "linux" ->
-      let objdump = find_some [
-          find_objdump ();
+      let objdump = first_success [
+          find_objdump;
           which "objdump"] in
-      let cxxfilt = find_some [
-          find_cppfilt ();
+      let cxxfilt = first_success [
+          find_cxxfilt;
           which "c++filt"] in
       let objdumps = collect_objdumps () in
       let targets = collect_targets objdumps in
       write objdump cxxfilt targets
     | "macos" ->
-      let objdump = find_some [
-          find_objdump ();
+      let objdump = first_success [
+          find_objdump;
           which "gobjdump";
           find_in_cellar "gobjdump"; ] in
-      let cxxfilt = find_some [
-          find_cppfilt ();
+      let cxxfilt = first_success [
+          find_cxxfilt;
           which "c++filt";
-          find_in_cellar "cppfilt"; ] in
+          find_in_cellar "c++filt"; ] in
+
       let objdumps = split_results "mdfind -name objdump" in
       let objdumps = List.filter (fun x -> not (Sys.is_directory x)) objdumps in
       let targets = collect_targets objdumps in
