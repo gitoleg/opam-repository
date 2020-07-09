@@ -130,8 +130,7 @@ variables {
 %s
 }
 |} deps vars;
-  close_out oc;
-  Sys.command "cat %{_:name}%.config" |> ignore
+  close_out oc
 
 let of_env var () =
   try Some (Sys.getenv var)
