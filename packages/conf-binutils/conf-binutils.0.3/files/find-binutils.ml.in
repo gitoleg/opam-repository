@@ -7,7 +7,7 @@ type file = {
 }
 
 type tool = {
-  names : string list;
+  test  : string -> bool;
   main  : file option;
   files : file list;
 }
@@ -21,11 +21,11 @@ let (/) = Filename.concat
 
 let digest path = Digest.to_hex (Digest.file path)
 
-let add_tool var ~file ~names t =
+let add_tool var ~file ~test t =
   let main = match file with
     | None -> None
     | Some path -> Some {path; dgst = digest path }  in
-  Names.add var {names; main; files = []} t
+  Names.add var {test; main; files = []} t
 
 let read_all ch =
   let buf = Buffer.create 16 in
@@ -109,23 +109,17 @@ let dependencies ~init files =
       sprintf " [ %S %S ] " path dgst :: depends)
 
 let write t =
-  let vars_of_tool name {main; files} =
-    let main, files =
-      match main, files with
-      | None, [] -> failed_to_find name
-      | None, main :: files -> main, files
-      | Some main, files -> main, files in
-    let files = dedup main files in
-    sprintf "%s: %S" name main.path,
-    sprintf "%ss: %S" name (string_of_files files) in
   let deps, vars =
-    Names.fold (fun name tool (deps, vars) ->
-        match tool.files with
-        | [] -> failed_to_find name
-        | main :: others ->
-          let deps = dependencies ~init:deps tool.files in
-          let main, others = vars_of_tool name tool in
-          deps, main :: others :: vars) t ([], [])  in
+    Names.fold (fun name {main; files} (deps, vars) ->
+        let main, files = match main, files with
+          | None, [] -> failed_to_find name
+          | None, main :: files -> main, files
+          | Some main, files -> main, files in
+        let files = dedup main files in
+        let deps = dependencies ~init:deps (main :: files) in
+        let main = sprintf "%s: %S" name main.path in
+        let files = sprintf "%ss: %S" name (string_of_files files) in
+        deps, main :: files :: vars) t ([], [])  in
   let oc = open_out "%{_:name}%.config" in
   let deps = String.concat "\n" deps in
   let vars = String.concat "\n" vars in
@@ -139,27 +133,48 @@ variables {
   close_out oc;
   Sys.command "cat %{_:name}%.config" |> ignore
 
-let which name () = cmd "which %s" name
-
 let of_env var () =
   try Some (Sys.getenv var)
   with Not_found -> None
 
-let cellar () = cmd "brew --cellar"
-
-let find_in_cellar name () =
-  match cmd "brew --cellar" with
-  | None -> None
-  | Some cellar ->
-    match cmd "find %s/binutils -name %s" cellar name with
-    | None -> None
-    | Some s -> match split ~on:'\n' s with
-      | [] -> None
-      | x :: _ -> Some x
-
 let of_opam_config var () = match var with
   | "" -> None
   | x  -> Some x
+
+let match_files path files test =
+  Array.fold_left files ~init:[] ~f:(fun acc file ->
+      if test file then
+        let path = path / file in
+        {path; dgst = digest path} :: acc
+      else acc)
+
+let update t path =
+  if Sys.file_exists path && Sys.is_directory path then
+    let files = Sys.readdir path in
+    Names.fold (fun name tool t ->
+        let files = match_files path files tool.test in
+        Names.add name {tool with files = tool.files @ files} t) t t
+  else t
+
+let collect t pathes = List.fold_left pathes ~f:update ~init:t
+
+let readdir path =
+  let rec read acc path =
+    let subdirs =
+      Sys.readdir path |>
+      Array.fold_left ~init:[] ~f:(fun acc d ->
+          let path' = path / d in
+          if Sys.is_directory path' then path' :: acc
+          else acc) in
+    match subdirs with
+    | [] -> path :: acc
+    | subdirs -> List.fold_left subdirs ~f:read ~init:acc in
+  Sys.readdir path |>
+  Array.fold_left ~init:[] ~f:(fun acc d ->
+      let path' = path / d in
+      if Sys.is_directory path' then
+        read acc path'
+      else acc)
 
 let rec first_success = function
   | [] -> None
@@ -189,55 +204,27 @@ let has_prefix str pref =
   len <= String.length str &&
   String.(sub str 0 len = pref)
 
-let match_files path files names =
-  Array.fold_left files ~init:[] ~f:(fun acc file ->
-      if List.exists ~f:(Filename.check_suffix file) names
-      then
-        let path = path / file in
-        {path; dgst = digest path} :: acc
-      else acc)
+let is_objdump file =
+  let names = ["objdump"; "gobjdump"] in
+  List.exists ~f:(Filename.check_suffix file) names &&
+  not (has_prefix file "llvm")
 
-let update t path =
-  if Sys.file_exists path && Sys.is_directory path then
-    let files = Sys.readdir path in
-    Names.fold (fun name tool t ->
-        let files = match_files path files tool.names in
-        Names.add name {tool with files = tool.files @ files} t) t t
-  else t
-
-let collect t pathes = List.fold_left pathes ~f:update ~init:t
-
-let readdir path =
-  let rec read acc path =
-    let subdirs =
-      Sys.readdir path |>
-      Array.fold_left ~init:[] ~f:(fun acc d ->
-          let path' = path / d in
-          if Sys.is_directory path' then path' :: acc
-          else acc) in
-    match subdirs with
-    | [] -> path :: acc
-    | subdirs -> List.fold_left subdirs ~f:read ~init:acc in
-  Sys.readdir path |>
-  Array.fold_left ~init:[] ~f:(fun acc d ->
-      let path' = path / d in
-      if Sys.is_directory path' then
-        read acc path'
-      else acc)
+let is_cxxfilt file = Filename.check_suffix file "c++filt"
 
 let () =
   let t =
     add_tool "objdump"
       ~file:(find_objdump ())
-      ~names:["objdump"; "gobjdump"] Names.empty |>
+      ~test:is_objdump
+      Names.empty |>
     add_tool "cxxfilt"
       ~file:(find_cxxfilt ())
-      ~names:["c++filt"] in
+      ~test:is_cxxfilt in
   try
     match "%{os}%" with
     | "linux" -> write @@ collect t @@ all_pathes ()
     | "macos" ->
-      let pathes = match cellar () with
+      let pathes = match cmd "brew --cellar" with
         | None -> all_pathes ()
         | Some cellar -> readdir cellar @ all_pathes () in
       let t = collect t pathes in
