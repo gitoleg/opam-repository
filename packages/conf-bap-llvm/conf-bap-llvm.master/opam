@@ -16,7 +16,10 @@ depends: [
 depexts: [
 
   # debian
-  ["llvm-7-dev"] {os-distribution = "debian"}
+  ["llvm-6.0-dev"] {os-distribution = "debian" & os-version = "8"}       # jessie
+  ["llvm-7-dev"]   {os-distribution = "debian" & os-version = "9"}       # stretch
+  ["llvm-7-dev"]   {os-distribution = "debian" & os-version = "10"}      # buster
+  ["llvm-9-dev"]   {os-distribution = "debian" & os-version = "unknown"} # testing
 
   # ubuntu
   ["llvm-3.8-dev"] {os-distribution = "ubuntu" & os-version = "14.04"} #trusty
@@ -31,7 +34,7 @@ depexts: [
   ["llvm-6.0"] {os = "macos" & os-distribution = "macports"}
   ["llvm@9"]   {os = "macos" & os-distribution = "homebrew"}
 
-  #alpine
+  # alpine
   ["llvm-dev" "llvm-static"] {os-distribution = "alpine"}
 ]
 
