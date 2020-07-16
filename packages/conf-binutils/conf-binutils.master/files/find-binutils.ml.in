@@ -103,10 +103,10 @@ let write t =
           | None, main :: files -> main, files
           | Some main, files -> main, files in
         let files = dedup main files in
-        let deps = dependencies ~init:deps (main :: files) in
-        let main = sprintf "%s: %S" name main.path in
-        let files = sprintf "%ss: %S" name (string_of_files files) in
-        deps, main :: files :: vars) t ([], [])  in
+        let files = main :: files in
+        let deps = dependencies ~init:deps files in
+        let files = sprintf "%s: %S" name (string_of_files files) in
+        deps, files :: vars) t ([], [])  in
   let oc = open_out "%{_:name}%.config" in
   let deps = String.concat "\n" deps in
   let vars = String.concat "\n" vars in
@@ -165,18 +165,6 @@ let rec first_success = function
     | None -> first_success fs
     | r -> r
 
-let find_objdump () =
-  first_success [
-    of_opam_config "%{objdump-path}%";
-    of_env "OBJDUMP_PATH";
-  ]
-
-let find_cxxfilt () =
-  first_success [
-    of_opam_config "%{cxxfilt-path}%";
-    of_env "CXXFILT_PATH";
-  ]
-
 let is_dir p = Sys.file_exists p && Sys.is_directory p
 
 let all_pathes () =
@@ -189,26 +177,39 @@ let has_prefix str pref =
   len <= String.length str &&
   String.(sub str 0 len = pref)
 
-let add_var name ~file ~test t =
-  let main = match file with
-    | None -> None
-    | Some path -> Some {path; dgst = digest path }  in
+let add_var name ?(opam="") ?(env="") ~test t =
+  let main = match
+      first_success [ of_opam_config opam; of_env env] with
+  | None -> None
+  | Some path -> Some {path; dgst = digest path }  in
   Vars.add name {test; main; files = []} t
 
-let is_objdump file =
-  Filename.check_suffix file "objdump" &&
-  not (has_prefix file "llvm")
 
-let is_cxxfilt file = Filename.check_suffix file "c++filt"
+let is_llvm_tool file = has_prefix file "llvm"
+
+let check file ~suf =
+  Filename.check_suffix file suf &&
+  not (is_llvm_tool file)
+
+let is_objdump file = check file ~suf:"objdump"
+let is_cxxfilt file = check file ~suf:"c++filt"
+let is_readelf file = check file ~suf:"readelf"
 
 let t =
-  add_var "objdump"
-    ~file:(find_objdump ())
+  add_var "objdumps"
+    ~opam:"%{objdump-path}%"
+    ~env:"OBJDUMP_PATH"
     ~test:is_objdump
     Vars.empty |>
-  add_var "cxxfilt"
-    ~file:(find_cxxfilt ())
-    ~test:is_cxxfilt
+  add_var "cxxfilts"
+    ~opam:"%{cxxfilt-path}%"
+    ~env:"CXXFILT_PATH"
+    ~test:is_cxxfilt |>
+  add_var "readelfs"
+    ~opam:"%{readelf-path}%"
+    ~env:"READELF_PATH"
+    ~test:is_readelf
+
 
 let () =
   try
