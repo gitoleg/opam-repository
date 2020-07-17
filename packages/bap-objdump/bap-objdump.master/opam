@@ -23,7 +23,7 @@ depends: [
   "bap-std" {= "master"}
   "re"
   "cmdliner"
-  "conf-binutils" {= "master"}
+  "conf-binutils" {= "0.3"}
 ]
 synopsis: "Extract symbols from binary, using binutils objdump"
 url {
