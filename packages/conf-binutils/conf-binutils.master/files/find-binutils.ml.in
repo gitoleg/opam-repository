@@ -178,10 +178,10 @@ let has_prefix str pref =
   String.(sub str 0 len = pref)
 
 let add_var name ?(opam="") ?(env="") ~test t =
-  let main = match
-      first_success [ of_opam_config opam; of_env env] with
-  | None -> None
-  | Some path -> Some {path; dgst = digest path }  in
+  let main =
+    match first_success [of_opam_config opam; of_env env] with
+    | None -> None
+    | Some path -> Some {path; dgst = digest path }  in
   Vars.add name {test; main; files = []} t
 
 
