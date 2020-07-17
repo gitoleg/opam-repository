@@ -13,27 +13,25 @@ type tool = {
 }
 
 module Digests = Set.Make(String)
-module Vars = Map.Make(String)
+module Names = Map.Make(String)
 
-type t = tool Vars.t
+type t = tool Names.t
 
 let (/) = Filename.concat
 
 let digest path = Digest.to_hex (Digest.file path)
 
-let read_all ch =
-  let buf = Buffer.create 16 in
-  let rec loop () =
-    match input_char ch with
-    | ch -> Buffer.add_char buf ch; loop ()
-    | exception End_of_file -> String.trim (Buffer.contents buf) in
-  loop ()
+let input_all ch =
+  let buf = Buffer.create 4096 in
+  let rec read () = Buffer.add_channel buf ch 4096; read () in
+  try read ()
+  with End_of_file -> String.trim @@ Buffer.contents buf
 
 let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
   for i = String.length s - 1 downto 0 do
-    if String.get s i = sep then begin
+    if s.[i] = sep then begin
       r := String.sub s (i + 1) (!j - i - 1) :: !r;
       j := i
     end
@@ -61,7 +59,7 @@ let cmd fmt =
   let run c =
     try
       let inp = Unix.open_process_in c in
-      let res = read_all inp in
+      let res = input_all inp in
       match Unix.close_process_in inp with
       | Unix.WEXITED 0 -> Some res
       | s -> raise (Command_failed s)
@@ -97,7 +95,7 @@ let dependencies ~init files =
 
 let write t =
   let deps, vars =
-    Vars.fold (fun name {main; files} (deps, vars) ->
+    Names.fold (fun name {main; files} (deps, vars) ->
         let main, files = match main, files with
           | None, [] -> failed_to_find name
           | None, main :: files -> main, files
@@ -137,12 +135,12 @@ let match_files path files test =
 let update t path  =
   if Sys.is_directory path then
     let files = Sys.readdir path in
-    Vars.fold (fun name tool t ->
+    Names.fold (fun name tool t ->
         let files = match_files path files tool.test in
-        Vars.add name {tool with files = tool.files @ files} t) t t
+        Names.add name {tool with files = tool.files @ files} t) t t
   else t
 
-let collect t pathes = List.fold_left pathes ~f:update ~init:t
+let collect t paths = List.fold_left paths ~f:update ~init:t
 
 let search t path =
   let rec loop t path =
@@ -151,23 +149,23 @@ let search t path =
       Sys.readdir path |>
       Array.fold_left ~init:t ~f:(fun t file -> loop t @@ path / file)
     else
-      Vars.fold (fun name tool t ->
+      Names.fold (fun name tool t ->
           if tool.test (Filename.basename path)
           then
             let file = {path; dgst = digest path} in
-            Vars.add name {tool with files = tool.files @ [file]} t
+            Names.add name {tool with files = tool.files @ [file]} t
           else t) t t in
   loop t path
 
 let rec first_success = function
   | [] -> None
-  | f :: fs ->  match f () with
+  | f :: fs -> match f () with
     | None -> first_success fs
     | r -> r
 
 let is_dir p = Sys.file_exists p && Sys.is_directory p
 
-let all_pathes () =
+let all_paths () =
   match of_env "PATH" () with
   | None -> []
   | Some r -> List.filter ~f:is_dir (split r ~on:':')
@@ -175,51 +173,46 @@ let all_pathes () =
 let has_prefix str pref =
   let len = String.length pref in
   len <= String.length str &&
-  String.(sub str 0 len = pref)
-
-let add_var name ?(opam="") ?(env="") ~test t =
-  let main =
-    match first_success [of_opam_config opam; of_env env] with
-    | None -> None
-    | Some path -> Some {path; dgst = digest path }  in
-  Vars.add name {test; main; files = []} t
-
+  String.sub str 0 len = pref
 
 let is_llvm_tool file = has_prefix file "llvm"
 
-let check file ~suf =
-  Filename.check_suffix file suf &&
+let check ~suffix file =
+  Filename.check_suffix file suffix &&
   not (is_llvm_tool file)
 
-let is_objdump file = check file ~suf:"objdump"
-let is_cxxfilt file = check file ~suf:"c++filt"
-let is_readelf file = check file ~suf:"readelf"
+let add_var name ?(opam="") ?(env="") ~suffix t =
+  let main =
+    match first_success [of_opam_config opam; of_env env] with
+    | None -> None
+    | Some path -> Some {path; dgst = digest path } in
+  Names.add name {test = check ~suffix; main; files = []} t
 
 let t =
   add_var "objdumps"
     ~opam:"%{objdump-path}%"
     ~env:"OBJDUMP_PATH"
-    ~test:is_objdump
-    Vars.empty |>
+    ~suffix:"objdump"
+    Names.empty |>
   add_var "cxxfilts"
     ~opam:"%{cxxfilt-path}%"
     ~env:"CXXFILT_PATH"
-    ~test:is_cxxfilt |>
+    ~suffix:"c++filt" |>
   add_var "readelfs"
     ~opam:"%{readelf-path}%"
     ~env:"READELF_PATH"
-    ~test:is_readelf
+    ~suffix:"readelf"
 
 
 let () =
   try
     match "%{os}%" with
-    | "linux" -> write @@ collect t @@ all_pathes ()
+    | "linux" -> write @@ collect t @@ all_paths ()
     | "macos" ->
       let t = match cmd "brew --cellar" with
         | None -> t
         | Some cellar -> search t cellar in
-      write @@ collect t @@ all_pathes ()
+      write @@ collect t @@ all_paths ()
     | s ->
       eprintf "unsupported OS %s\n" s;
       exit 1
