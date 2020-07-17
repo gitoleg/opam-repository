@@ -10,8 +10,7 @@ license: "MIT"
 build: [
   ["./configure" "--prefix=%{prefix}%"
                  "--enable-objdump"
-                 "--objdump-targets=%{conf-binutils:targets}%"
-                 "--objdump-path=%{conf-binutils:objdump}%"
+                 "--objdump-paths=%{conf-binutils:objdumps}%"
                  ]
   [make]
 ]
@@ -24,7 +23,7 @@ depends: [
   "bap-std" {= "master"}
   "re"
   "cmdliner"
-  "conf-binutils"
+  "conf-binutils" {= "master"}
 ]
 synopsis: "Extract symbols from binary, using binutils objdump"
 url {

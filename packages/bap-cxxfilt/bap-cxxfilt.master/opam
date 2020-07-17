@@ -10,8 +10,7 @@ license: "MIT"
 build: [
   ["./configure" "--prefix=%{prefix}%"
                  "--enable-cxxfilt"
-                 "--cxxfilt-targets=%{conf-binutils:targets}%"
-                 "--cxxfilt-path=%{conf-binutils:cxxfilt}%"
+                 "--cxxfilt-paths=%{conf-binutils:cxxfilts}%"
                  ]
   [make]
 ]
@@ -24,7 +23,7 @@ depends: [
   "ocaml" {>= "4.07.0" & < "4.10.0"}
   "bap-std" {= "master"}
   "bap-demangle"
-  "conf-binutils" {>= "0.2"}
+  "conf-binutils" {= "master"}
 ]
 synopsis: "A demangler that relies on a c++filt utility"
 url {
