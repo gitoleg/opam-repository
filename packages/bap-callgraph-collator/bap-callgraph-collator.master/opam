@@ -1,0 +1,31 @@
+opam-version: "2.0"
+name: "bap-callgraph-collator"
+version: "master"
+maintainer: "Ivan Gotovchits <ivg@ieee.org>"
+authors: "BAP Team"
+homepage: "https://github.com/BinaryAnalysisPlatform/bap/"
+bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
+dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
+license: "MIT"
+build: [
+  ["./configure" "--prefix=%{prefix}%" "--enable-callgraph-collator"]
+  [make]
+]
+
+install: [[make "install"]]
+
+remove: [["ocamlfind" "remove" "bap-plugin-callgraph_collator"]
+         ["bapbundle" "remove" "callgraph_collator.plugin"]]
+
+depends: [
+  "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "bap-std" {= "master"}
+  "bap-main"
+  "graphlib"
+  "core_kernel" {>= "v0.12" & < "v0.13"}
+  "re"
+]
+synopsis: "Collates programs based on their callgraphs"
+url {
+  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+}
