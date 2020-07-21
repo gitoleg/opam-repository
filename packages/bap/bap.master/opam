@@ -22,6 +22,7 @@ depends: [
   "bap-c" {= "master"}
   "bap-cache" {= "master"}
   "bap-cxxfilt" {= "master"}
+  "bap-callgraph-collator" {= "master"}
   "bap-callsites" {= "master"}
   "bap-constant-tracker" {= "master"}
   "bap-demangle" {= "master"}
