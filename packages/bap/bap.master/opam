@@ -63,6 +63,7 @@ depends: [
   "bap-relocatable" {= "master"}
   "bap-report" {= "master"}
   "bap-run" {= "master"}
+  "bap-specification" {= "master"}
   "bap-ssa" {= "master"}
   "bap-std" {= "master"}
   "bap-strings" {= "master"}
