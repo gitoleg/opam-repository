@@ -167,7 +167,8 @@ let rec first_success fs =
 
 let () =
   try
-    let base = [ of_opam_config; of_env; locate_by_version; which_llvm_config;] in
+    let base = [ of_opam_config; of_env; locate_by_version;
+                 which_llvm_config;] in
     let os_specific = match "%{os}%" with
       | "macos" -> [find_in_cellar]
       | _ -> [] in
