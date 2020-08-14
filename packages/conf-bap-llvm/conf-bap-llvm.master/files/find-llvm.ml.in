@@ -1,14 +1,15 @@
-#load "unix.cma"
-
 open Printf
+open StdLabels
 
-let read_all ch =
-  let buf = Buffer.create 16 in
-  let rec loop () =
-    match input_char ch with
-    | ch -> Buffer.add_char buf ch; loop ()
-    | exception End_of_file -> String.trim (Buffer.contents buf) in
-  loop ()
+let versions = ["10.0"; "9.0"; "8.0"; "7.0"; "6.0";]
+
+let (/) = Filename.concat
+
+let input_all ch =
+  let buf = Buffer.create 4096 in
+  let rec read () = Buffer.add_channel buf ch 4096; read () in
+  try read ()
+  with End_of_file -> String.trim @@ Buffer.contents buf
 
 exception Command_failed of Unix.process_status
 
@@ -27,22 +28,38 @@ let cmd fmt =
   let run c =
     try
       let inp = Unix.open_process_in c in
-      let res = read_all inp in
+      let res = input_all inp in
       match Unix.close_process_in inp with
       | Unix.WEXITED 0 -> Some res
       | s -> raise (Command_failed s)
-    with e ->
-      eprintf "command %s failed: %s\n" c (exn_to_string e);
-      None in
+    with e -> None in
   ksprintf run fmt
 
+let which c = cmd "which %s" c
+
+let index_opt str c =
+  try Some (String.index str '.')
+  with Not_found -> None
+
+let major_version ver = match index_opt ver '.' with
+  | None -> ver
+  | Some i -> String.sub ver 0 i
+
+let versions_equal v v' =
+  String.equal (major_version v) (major_version v')
+
+let is_supported_version cfg =
+  match cmd "%s --version" cfg with
+  | None -> false
+  | Some ver' -> List.exists (versions_equal ver') versions
+
 let of_opam_config () =
-  let cfg = "%{llvm-config}%" in
-  if cfg = "" then None
-  else Some cfg
+  match "%{llvm-config}%" with
+  | "" -> None
+  | cfg -> which cfg
 
 let of_env () =
-  try Some (Sys.getenv "LLVM_CONFIG")
+  try which (Sys.getenv "LLVM_CONFIG")
   with Not_found -> None
 
 let write path version =
@@ -58,93 +75,104 @@ variables {
 |} path digest path version;
   close_out oc
 
-let (/) = Filename.concat
+let has_prefix str pref =
+  let len = String.length pref in
+  len <= String.length str &&
+  String.sub str 0 len = pref
 
+let is_llvm_config file =
+  has_prefix (Filename.basename file) "llvm-config" &&
+  is_supported_version file
 
-let index_opt str c =
-  try Some (String.index str '.')
-  with Not_found -> None
+let opendir path =
+  try Some (Unix.opendir path)
+  with Unix.Unix_error _ -> None
 
-let major_version ver = match index_opt ver '.' with
-  | None -> ver
-  | Some i -> String.sub ver 0 i
+let next dir =
+  try Some (Unix.readdir dir)
+  with End_of_file -> None
 
-let normalize ver =
-  match major_version ver with
-  | "3" ->
-    if String.length ver >= 3 then
-      String.sub ver 0 3
-    else ver
-  | x -> x
+let is_dir path =
+  Sys.file_exists path && Sys.is_directory path
 
-let brew_config ver =
-  match cmd "brew --cellar" with
+let search path =
+  let is_parent p = p = Filename.parent_dir_name in
+  let is_hidden p = String.length p > 0 && p.[0] = '.' in
+  let leave dir result =
+    Unix.closedir dir;
+    result in
+  let rec read current dir =
+    match next dir with
+    | None -> leave dir None
+    | Some entry when is_parent entry || is_hidden entry ->
+      read current dir
+    | Some entry when is_dir (current / entry) ->
+      begin
+        let path = current / entry in
+        match opendir path with
+        | None -> read current dir
+        | Some subdir -> match read path subdir with
+          | None -> read current dir
+          | found -> leave dir found
+      end
+    | Some entry ->
+      let path = current / entry in
+      if is_llvm_config path
+      then leave dir (Some path)
+      else read current dir in
+  match opendir path with
   | None -> None
-  | Some cellar ->
-    match cmd "ls %s | grep %s" cellar (normalize ver) with
-    | None -> None
-    | Some p ->
-      cmd "find %s/%s -name \"llvm-config\"" cellar p
+  | Some dir -> read path dir
+
+let find_in_cellar () = match cmd "brew --cellar" with
+  | None -> None
+  | Some cellar -> search cellar
 
 let macports_config ver = sprintf "llvm-config-mp-%s" ver
 
-
-let configs ver =
+let configs_of_version ver =
   let ver' = match index_opt ver '.' with
     | None -> ver
     | Some i -> String.sub ver 0 i ^ String.sub ver (i + 1) 1 in
   let configs = [
     sprintf "llvm-config-%s" ver;
     sprintf "llvm-config-%s" ver';
-    sprintf "llvm-config-%s" (major_version ver);
-    "llvm-config";
-  ] in
+    sprintf "llvm-config-%s" (major_version ver)] in
   match "%{os}%" with
-  | "macos" ->
-    let configs = match brew_config ver with
-      | None -> configs
-      | Some b -> b :: configs in
-    macports_config ver :: configs
+  | "macos" -> macports_config ver :: configs
   | _ -> configs
 
-let find_opt ~f xs =
-  try Some (List.find f xs)
-  with Not_found -> None
+let locate_by_version () =
+  let rec find = function
+    | [] -> None
+    | cfg :: cfgs -> match which cfg with
+      | Some _ as path -> path
+      | None -> find cfgs in
+  find @@
+  List.fold_left versions ~init:[] ~f:(fun acc ver ->
+      acc @ configs_of_version ver)
 
-let versions_equal v v' =
-  String.equal (normalize v) (normalize v')
+let which_llvm_config () = match which "llvm-config" with
+  | None -> None
+  | Some cfg ->
+    if is_supported_version cfg then Some cfg
+    else None
 
-let locate () =
-  let versions = ["10.0"; "9.0"; "8.0"; "7.0"; "6.0"; "5.0"; "4.0"; "3.8"; "3.4"] in
-  List.fold_left (fun cfg ver ->
-      match cfg with
-      | Some _ -> cfg
-      | None ->
-        let configs = configs ver in
-        find_opt (fun cfg ->
-            match cmd "which %s" cfg with
-            | None -> false
-            | Some cfg ->
-              match cmd "%s --version" cfg with
-              | None -> false
-              | Some ver' ->
-                List.exists (versions_equal ver') versions) configs)
-    None versions
-
-let rec find_map fs =
+let rec first_success fs =
   match fs with
   | [] -> None
-  | f :: fs ->
-    match f () with
-    | None -> find_map fs
+  | f :: fs -> match f () with
+    | None -> first_success fs
     | x -> x
 
 let () =
   try
-    let path = match find_map [of_opam_config; of_env; locate] with
-      | Some cfg -> cmd "which %s" cfg
-      | None -> None in
-    match path with
+    let base = [ of_opam_config; of_env; locate_by_version;
+                 which_llvm_config;] in
+    let os_specific = match "%{os}%" with
+      | "macos" -> [find_in_cellar]
+      | _ -> [] in
+    match first_success (base @ os_specific) with
     | None -> eprintf "LLVM not found"; exit 1
     | Some path ->
       match cmd "%s --version" path with
