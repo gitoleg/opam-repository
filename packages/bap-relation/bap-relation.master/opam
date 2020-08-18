@@ -20,7 +20,7 @@ depends: [
 ]
 synopsis: "Relation Representation Library"
 description: """
-
+A representation of relations between two sets.
 """
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
