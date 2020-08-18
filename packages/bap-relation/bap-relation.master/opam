@@ -18,9 +18,12 @@ depends: [
   "oasis" {build & >= "0.4.7"}
   "base"
 ]
-synopsis: "Relation Representation Library"
+synopsis: "A set of relations (bimap)."
 description: """
-A representation of relations between two sets.
+A relation between two sets is a set of pairs made from the
+elements of these sets. This library implements a bidirectional mapping 
+between two sets and computes their matching that defines bijections
+between the sets.
 """
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
