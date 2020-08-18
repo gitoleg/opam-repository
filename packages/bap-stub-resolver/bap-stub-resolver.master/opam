@@ -35,11 +35,18 @@ depends: [
   "core_kernel" {>= "v0.12" & < "v0.13"}
   "ounit"
 ]
-synopsis: "Substitutes calls to stubs with calls to real functions"
+synopsis: "Identifies and manages stub functions in a binary."
 description: """
-  Provides an abi pass that transforms a program by substituting calls
-  to stubs with calls to real subroutines when they are present in
-  the binary."""
+Identifies functions that are stubs and redirects calls to stubs to
+the calls to the implemenations, in case if the latter is present in
+the binary.
+
+A stub is piece of binary code that is used to call a function
+implementation. Most commonly stubs are employed for external
+functions, whose implementation is later loaded from some library,
+however some ABIs are using stubs for internal functions, in case if
+they have external linkage.
+"""
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }
