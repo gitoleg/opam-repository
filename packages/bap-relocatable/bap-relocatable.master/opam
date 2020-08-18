@@ -33,8 +33,10 @@ depends: [
   "bap-main"
   "ppx_jane"
 ]
-synopsis:
-  "Provides a brancher service for BAP that handles certain relocations"
+synopsis: "Extracts symbolic information from the program relocations.
+
+The relocation symbolizer leverages the relocation information stored
+in files to extract symbol names."
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }
