@@ -41,5 +41,5 @@ as well as to specify additional constraints and post asserts that are dispatche
 the SMT solver.
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

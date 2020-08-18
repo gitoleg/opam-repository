@@ -25,5 +25,5 @@ depends: [
 ]
 synopsis: "Enables the promiscuous mode of execution"
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

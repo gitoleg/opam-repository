@@ -30,5 +30,5 @@ powerful type system of the OCaml language to facilitate
 development of complex knowledge representation and reasoning systems.
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

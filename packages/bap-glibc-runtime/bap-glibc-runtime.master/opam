@@ -32,5 +32,5 @@ detects the locations of main and __libc_start_main
 functions (and adds the latter if it is absent)
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

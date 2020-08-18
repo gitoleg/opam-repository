@@ -27,5 +27,5 @@ depends: [
 ]
 synopsis: "Stores command line parameters and resources in a single file"
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

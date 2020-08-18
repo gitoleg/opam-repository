@@ -31,5 +31,5 @@ This library is an entry point to BAP and serves the two goals:
 - extending BAP with the user code.
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

@@ -20,5 +20,5 @@ depends: [
 ]
 synopsis: "Fixed-size bitvectors and modular arithmetic, based on Zarith"
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

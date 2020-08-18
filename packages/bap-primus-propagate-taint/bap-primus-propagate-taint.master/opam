@@ -27,5 +27,5 @@ depends: [
 ]
 synopsis: "A compatibility layer between different taint analysis frameworks"
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

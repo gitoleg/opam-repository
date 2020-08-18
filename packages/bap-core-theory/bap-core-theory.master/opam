@@ -31,5 +31,5 @@ accurate representation of the architectural and micro-architectural
 details of the program behavior.
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

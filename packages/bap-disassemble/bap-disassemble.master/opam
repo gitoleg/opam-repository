@@ -26,5 +26,5 @@ command of the bap frontend which is assumed when no other command
 was specified.
 """
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

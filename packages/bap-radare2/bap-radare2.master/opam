@@ -33,5 +33,5 @@ depends: [
 ]
 synopsis: "Extract symbols from binary using radare2"
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }

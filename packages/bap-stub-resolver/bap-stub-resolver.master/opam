@@ -41,5 +41,5 @@ description: """
   to stubs with calls to real subroutines when they are present in
   the binary."""
 url {
-  src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
+  src: "git+https://github.com/ivg/bap#improves-symbolization"
 }
