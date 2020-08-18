@@ -32,10 +32,12 @@ depends: [
   "bap-future" {= "master"}
   "bap-knowledge" {= "master"}
   "bitvec" {= "master"}
+  "bitvec-order" {= "master"}
   "bap-core-theory"  {= "master"}
   "bap-bundle" {= "master"}
   "bap-main" {= "master"}
   "bap-plugins" {= "master"}
+  "bap-relation" {= "master"}
   "camlzip" {>= "1.07"}
   "core_kernel" {>= "v0.12" & < "v0.13"}
   "bin_prot" {>= "v0.12" & < "v0.13"}

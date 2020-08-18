@@ -60,6 +60,7 @@ depends: [
   "bap-raw" {= "master"}
   "bap-recipe" {= "master"}
   "bap-recipe-command" {= "master"}
+  "bap-relation" {= "master"}
   "bap-relocatable" {= "master"}
   "bap-report" {= "master"}
   "bap-run" {= "master"}

@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "bap-relocatable"
+name: "bap-relation"
 version: "master"
 maintainer: "Ivan Gotovchits <ivg@ieee.org>"
 authors: "BAP Team"
@@ -8,33 +8,20 @@ bug-reports: "https://github.com/BinaryAnalysisPlatform/bap/issues"
 dev-repo: "git://github.com/BinaryAnalysisPlatform/bap/"
 license: "MIT"
 build: [
-  ["./configure" "--prefix=%{prefix}%" "--enable-relocatable"]
+  ["./configure" "--prefix=%{prefix}%" "--enable-relation"]
   [make]
 ]
-
 install: [[make "install"]]
-
-remove: [
-        ["ocamlfind" "remove" "bap-plugin-relocatable"]
-        ["bapbundle" "remove" "relocatable.plugin"]
-        ]
-
+remove: [["ocamlfind" "remove" "bap-relation"]]
 depends: [
   "ocaml" {>= "4.07.0" & < "4.10.0"}
-  "bap-std" {= "master"}
-  "ogre"
-  "bap-knowledge"
-  "core_kernel"
-  "bap-future"
-  "monads"
-  "bitvec"
-  "bitvec-order"
-  "bap-core-theory"
-  "bap-main"
-  "ppx_jane"
+  "oasis" {build & >= "0.4.7"}
+  "base"
 ]
-synopsis:
-  "Provides a brancher service for BAP that handles certain relocations"
+synopsis: "Relation Representation Library"
+description: """
+
+"""
 url {
   src: "git+https://github.com/BinaryAnalysisPlatform/bap#master"
 }

@@ -16,8 +16,15 @@ remove: [["ocamlfind" "remove" "bap-plugin-bil"]
          ["bapbundle" "remove" "bil.plugin"]]
 depends: [
   "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "ppx_jane"
   "bap-std" {= "master"}
-  "cmdliner"
+  "bap-future"
+  "monads"
+  "bitvec"
+  "bitvec-order"
+  "ogre"
+  "bap-main"
+
 ]
 synopsis: "Controls the BIL transformation pipeline"
 url {

@@ -27,7 +27,11 @@ depends: [
   "bap-knowledge" {= "master"}
   "bap-core-theory" {= "master"}
   "bap-main" {= "master"}
+  "bitvec" {= "master"}
   "bitvec-order" {= "master"}
+  "bap-future"
+  "bap-main"
+  "ppx_jane"
   "core_kernel" {>= "v0.12" & < "v0.13"}
   "ounit"
 ]

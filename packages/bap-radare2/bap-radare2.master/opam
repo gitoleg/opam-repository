@@ -23,6 +23,7 @@ depends: [
   "bap-core-theory"
   "bap-future"
   "bap-knowledge"
+  "bap-relation"
   "bitvec"
   "core_kernel" {>= "v0.12" & < "v0.13"}
   "conf-radare2"
