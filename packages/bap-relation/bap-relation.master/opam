@@ -14,9 +14,9 @@ build: [
 install: [[make "install"]]
 remove: [["ocamlfind" "remove" "bap-relation"]]
 depends: [
-  "ocaml" {>= "4.07.0" & < "4.10.0"}
+  "ocaml" {>= "4.03.0"}
   "oasis" {build & >= "0.4.7"}
-  "base"
+  "base"  {>= "v0.11.0"}
 ]
 synopsis: "A set of relations (bimap)."
 description: """
